@@ -1,38 +1,1363 @@
-<!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>도착하지 않은 크리스마스 · 서울갤러리</title>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, viewport-fit=cover"
+>
+<title>별이 기억하는 겨울</title>
+
 <style>
-:root{--ink:#243e36;--green:#234e40;--paper:#faf6ec;--red:#b4483d;--line:#ded8c7;--gold:#b18342}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family: 'Apple SD Gothic Neo','Malgun Gothic',sans-serif;line-height:1.7}button,input{font:inherit}button{cursor:pointer;touch-action:manipulation}button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:4px}button:disabled{cursor:default;opacity:.45}header{padding:18px 5vw;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:15px}header strong{font-size:13px;letter-spacing:.13em}header span{font-size:11px;color:#68766c}.layout{max-width:1140px;margin:42px auto;padding:0 28px;display:grid;grid-template-columns:280px 1fr;gap:55px}aside{padding-top:15px}.eyebrow{font-size:11px;letter-spacing:.2em;color:var(--red);font-weight:bold}h1{font-family:Georgia,'Batang',serif;font-weight:500;font-size:39px;line-height:1.35;letter-spacing:-.05em;margin:14px 0 20px}h2{font-size:25px;line-height:1.5;letter-spacing:-.04em;margin:10px 0}p{margin:12px 0}.muted{color:#737c72;font-size:13px}.route{padding:0;list-style:none;margin:25px 0}.route button{background:none;border:0;color:inherit;text-align:left;width:100%;padding:10px 0;font-size:13px}.route button:disabled{opacity:.6}.dot{display:inline-flex;border:1px solid #b8c2b4;border-radius:50%;width:25px;height:25px;align-items:center;justify-content:center;margin-right:10px;font-size:11px}.active .dot,.done .dot{background:var(--green);color:white}.bag{border-top:1px solid var(--line);padding-top:17px}.stamps{display:flex;gap:7px;margin-top:10px}.stamp{border:1px dashed var(--gold);padding:5px 10px;color:var(--gold);font-size:12px;background:#fffbf1}.stamp.empty{opacity:.4}.card{position:relative;background:#fffdf7;border:1px solid var(--line);box-shadow:0 14px 55px #31453308;border-radius:6px;padding:30px 34px;min-height:570px}.card:before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:repeating-linear-gradient(120deg,#b64a40 0 18px,#faf6ec 18px 36px,#34594c 36px 54px,#faf6ec 54px 72px);border-radius:6px 6px 0 0}.topline{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#7b8075}.tag{border:1px solid var(--line);border-radius:20px;padding:2px 10px}.speech{border-left:3px solid #b2bda7;padding:6px 15px;background:#f0f2e9;margin:20px 0;font-size:14px}.speech b{display:block;font-size:11px;color:#687f61;margin-bottom:4px}.primary,.secondary{border:0;border-radius:4px;padding:12px 20px;font-size:14px}.primary{background:var(--green);color:#fff}.secondary{background:#edece3;color:var(--ink)}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:23px}.scene{background:#efeee4;border:1px solid #e1dfd0;border-radius:5px;padding:18px;margin:20px 0}.scene summary{cursor:pointer;font-size:13px;font-weight:bold}.note{font-size:12px;color:#7f7561}.status{font-size:14px;min-height:26px;margin-top:14px;color:var(--red)}.status.ok{color:var(--green)}.envelope{width:250px;max-width:90%;height:155px;margin:35px auto;background:#e9dfc9;position:relative;box-shadow:0 10px 16px #4d433516;border:1px solid #cabd9f;display:flex;align-items:flex-end;justify-content:center;padding-bottom:14px;font-family:Georgia,'Batang',serif}.envelope:before{content:'';position:absolute;top:0;left:0;border-left:124px solid transparent;border-right:124px solid transparent;border-top:85px solid #d6c7a9;max-width:100%}.seal{position:absolute;z-index:1;top:55px;left:calc(50% - 22px);border-radius:50%;width:44px;height:44px;background:var(--red);color:#f8e9cd;display:grid;place-items:center;font-size:22px}.choices{display:flex;gap:9px;flex-wrap:wrap;margin:16px 0}.choice{padding:12px 17px;border:1px solid #c8cfbe;background:white;border-radius:4px;color:var(--ink)}.choice.selected{background:var(--green);color:white}.slots{min-height:58px;border:1px dashed #a8b49e;padding:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:14px}.map{position:relative;padding:18px;background:#e8ede1;border-radius:5px;display:grid;grid-template-columns:repeat(3,1fr);gap:13px;max-width:420px;margin:16px auto}.map:before{content:'';position:absolute;left:0;right:0;top:48%;height:20px;transform:rotate(-14deg);background:#bed7d9}.map button{position:relative;min-height:65px;border:1px solid #b5c2ad;background:#fffdf4;border-radius:5px;color:var(--ink)}.map button.selected{background:var(--green);color:white}.lensboard{position:relative;border-radius:4px;height:185px;background:#d7c8b3;overflow:hidden;display:flex;align-items:center;justify-content:center;margin-top:15px}.cipher{font-family:Georgia,'Batang',serif;font-size:23px;letter-spacing:.12em;filter:blur(7px);opacity:.38}.lens{position:absolute;inset:0;clip-path:circle(57px at var(--x,50%) 50%);display:flex;align-items:center;justify-content:center;background:#fcf9ed;font-family:Georgia,'Batang',serif;font-size:23px;letter-spacing:.12em}.range{width:100%;accent-color:var(--green);margin-top:18px}.answer{padding:11px;border:1px solid #b9c4af;width:100%;max-width:300px;border-radius:4px;background:#fff;font-size:16px}.overlaybox{height:170px;position:relative;background:#eee9da;border:1px solid #d5ceba;overflow:hidden;margin:18px 0}.layer{position:absolute;inset:15px 0;display:flex;align-items:center;justify-content:center;font:36px Georgia,'Batang',serif;letter-spacing:10px;color:var(--green);transition:transform .1s}.layer:nth-child(2){color:var(--red)}.letter{padding:25px;background:#f6efdd;border:1px solid #ddcfb2;font-family:'Batang',Georgia,serif;line-height:2.1;animation:reveal .7s ease}.tree{font-size:65px;text-align:center;margin:20px 0;color:var(--green);line-height:1.1}.snow{pointer-events:none;position:fixed;inset:0;overflow:hidden;z-index:4}.snow i{position:absolute;top:-30px;animation:fall 6s linear infinite;color:#b58a47;font-style:normal}.footer{max-width:1140px;margin:20px auto 35px;padding:0 28px;display:flex;justify-content:space-between;gap:15px;font-size:11px;color:#778171}.textbtn{background:none;border:0;text-decoration:underline;color:#637364;font-size:12px;padding:5px}.help{background:#f5edda;padding:12px;font-size:13px;margin-top:12px}@keyframes reveal{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:none}}@keyframes fall{to{transform:translateY(110vh) rotate(180deg)}}@media(max-width:780px){header{padding:14px 20px}.layout{grid-template-columns:1fr;gap:20px;margin:20px auto;padding:0 18px}aside{padding:0}h1{font-size:29px;margin:8px 0}aside>p{display:none}.route{display:flex;margin:12px 0;gap:4px}.route li{flex:1}.route button{text-align:center;font-size:10px;padding:3px 0}.dot{display:flex;margin:0 auto 3px}.bag{padding-top:8px;display:flex;gap:15px;align-items:center}.stamps{margin:0}.card{padding:25px 20px;min-height:510px}h2{font-size:23px}.footer{padding:0 20px}.layer{font-size:27px;letter-spacing:5px}}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-</style></head><body><header><strong>SEOUL GALLERY <span>× CHRISTMAS POST</span></strong><span>인터랙티브 체험 시안</span></header>
-<div class="layout"><aside><div class="eyebrow">A LETTER WAITING FOR YOU</div><h1>도착하지 않은<br>크리스마스</h1><p class="muted">해치와 소울프렌즈의<br>마지막 편지 배달 작전</p><ol class="route" id="route"></ol><div class="bag"><span class="muted">배달 가방</span><div class="stamps" id="bag"></div></div><p class="note">현장 이동 없이 모든 미션을 체험할 수 있어요.<br>각 문제의 ‘현장 단서 보기’를 열어주세요.</p></aside><main class="card" id="app"></main></div><footer class="footer"><span>서울갤러리 · 크리스마스 미션 / 비공식 기획 시안</span><button class="textbtn" id="reset">처음부터 다시</button></footer><div id="snow" class="snow" aria-hidden="true"></div>
+/*
+  요청 비율 5 + 10 + 65 + 30 = 110이므로
+  각 영역의 상대적인 크기를 유지해 110등분으로 배치합니다.
+
+  상단 바       5fr
+  챕터 제목    10fr
+  중심 이미지 65fr
+  대화창       30fr
+
+  실제 적용 비율: 약 4.5% / 9.1% / 59.1% / 27.3%
+*/
+:root {
+  --paper: #fffaf0;
+  --green: #254e43;
+  --mint: #dcecdf;
+  --pink: #ed94b4;
+  --gold: #e7bd68;
+  --ink: #35483f;
+  --muted: #718177;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #e5e9df;
+  color: var(--ink);
+  font-family:
+    "Apple SD Gothic Neo",
+    "Noto Sans KR",
+    "Malgun Gothic",
+    sans-serif;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible {
+  outline: 3px solid #d58c40;
+  outline-offset: 3px;
+}
+
+button:disabled {
+  cursor: default;
+  opacity: .45;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/*
+  스마트폰 안전 영역을 포함한 화면 높이 안에 게임을 맞춥니다.
+  기본 비율은 가로:세로 = 1:1.65입니다.
+  화면이 좁거나 짧으면 비율을 유지하며 축소합니다.
+*/
+.viewport {
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  display: grid;
+  place-items: center;
+
+  padding:
+    max(6px, env(safe-area-inset-top))
+    max(6px, env(safe-area-inset-right))
+    max(6px, env(safe-area-inset-bottom))
+    max(6px, env(safe-area-inset-left));
+}
+
+.game {
+  width: min(
+    100%,
+    480px,
+    calc(
+      (
+        100dvh
+        - max(6px, env(safe-area-inset-top))
+        - max(6px, env(safe-area-inset-bottom))
+      ) / 1.65
+    )
+  );
+
+  aspect-ratio: 1 / 1.65;
+
+  display: grid;
+  grid-template-rows:
+    minmax(0, 5fr)
+    minmax(0, 10fr)
+    minmax(0, 65fr)
+    minmax(0, 30fr);
+
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+
+  background: var(--paper);
+  border-radius: 20px;
+  box-shadow: 0 15px 70px #243c3220;
+
+  container-type: inline-size;
+}
+
+.topbar {
+  min-height: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4%;
+  border-bottom: 1px solid #e7e8da;
+}
+
+.brand {
+  font-size: clamp(9px, 2.7cqw, 12px);
+  letter-spacing: .09em;
+  font-weight: 800;
+}
+
+.top-actions {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+
+.counter {
+  font-size: clamp(9px, 2.5cqw, 11px);
+  color: var(--muted);
+}
+
+.icon-button {
+  border: 0;
+  background: transparent;
+  color: var(--green);
+  padding: 2px 4px;
+  font-size: clamp(12px, 3.6cqw, 17px);
+}
+
+.chapter {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2% 5%;
+}
+
+.chapter small {
+  font-size: clamp(9px, 2.5cqw, 11px);
+  color: #a87942;
+  letter-spacing: .1em;
+}
+
+.chapter h1 {
+  margin: 2px 0 0;
+  font-size: clamp(16px, 5cqw, 24px);
+  line-height: 1.25;
+  letter-spacing: -.045em;
+}
+
+.stage {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  margin: 0 3%;
+  border-radius: 14px;
+  background: #ecebdc;
+}
+
+.art {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.art.contain {
+  object-fit: contain;
+  background: #f0f0e4;
+}
+
+/* 이미지 주소를 넣기 전에도 화면 구성을 볼 수 있는 임시 배경 */
+.placeholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  padding: 8%;
+  background:
+    radial-gradient(circle at 50% 30%, #fff9db, transparent 60%),
+    linear-gradient(160deg, #e1eee0, #f6e6cf);
+}
+
+.placeholder .symbol {
+  font-size: clamp(60px, 24cqw, 120px);
+  line-height: 1.3;
+  color: #cc9e48;
+  text-shadow: 0 0 25px #fff8c8;
+}
+
+.placeholder p {
+  margin: 8px 0 0;
+  font-size: clamp(12px, 3.7cqw, 16px);
+  font-weight: 700;
+}
+
+.scene-label {
+  position: absolute;
+  top: 3%;
+  left: 4%;
+  max-width: 90%;
+  padding: 5px 10px;
+  border-radius: 20px;
+  color: #fff;
+  background: #254e43d9;
+  font-size: clamp(10px, 2.8cqw, 13px);
+}
+
+.direction-card {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  bottom: 5%;
+  padding: 4%;
+  border-radius: 12px;
+  background: #fffdf2f2;
+  box-shadow: 0 5px 20px #253d3020;
+}
+
+.direction-card strong {
+  display: block;
+  font-size: clamp(13px, 4cqw, 18px);
+}
+
+.direction-card p {
+  margin: 5px 0 0;
+  font-size: clamp(11px, 3.2cqw, 14px);
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+/*
+  대사가 길어져도 다음 버튼이 밀려 화면 밖으로 나가지 않도록
+  대사 영역과 버튼 영역을 나눕니다.
+*/
+.dialogue {
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 5px;
+  padding: 3% 5% 4%;
+}
+
+.speaker {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: clamp(11px, 3.4cqw, 15px);
+  font-weight: 800;
+}
+
+.speaker-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--pink);
+}
+
+.dialogue-text {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+
+  font-size: clamp(12px, 3.8cqw, 17px);
+  line-height: 1.65;
+  white-space: pre-line;
+  word-break: keep-all;
+}
+
+.dialogue-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.dialogue-progress {
+  font-size: clamp(9px, 2.7cqw, 12px);
+  color: var(--muted);
+}
+
+.primary,
+.secondary {
+  border: 0;
+  border-radius: 9px;
+  padding: 9px 15px;
+  font-size: clamp(11px, 3.3cqw, 15px);
+  font-weight: 700;
+}
+
+.primary {
+  background: var(--green);
+  color: white;
+}
+
+.secondary {
+  background: #e8eddf;
+  color: var(--green);
+}
+
+/* 인트로 */
+.intro {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+  background: #173b34;
+}
+
+.intro .placeholder {
+  background:
+    radial-gradient(circle at 50% 28%, #fff7ce77, transparent 36%),
+    linear-gradient(#23473f, #142f30);
+}
+
+.intro .placeholder p {
+  display: none;
+}
+
+.intro::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    #102e2a15 30%,
+    #102e2a45 55%,
+    #102e2ae8
+  );
+  pointer-events: none;
+}
+
+.intro-copy {
+  position: absolute;
+  z-index: 1;
+  left: 8%;
+  right: 8%;
+  bottom: 7%;
+  text-align: center;
+  color: white;
+}
+
+.intro-copy small {
+  font-size: clamp(10px, 3cqw, 13px);
+  letter-spacing: .12em;
+}
+
+.intro-copy h2 {
+  margin: 12px 0;
+  font-size: clamp(29px, 9cqw, 43px);
+  line-height: 1.3;
+  letter-spacing: -.06em;
+}
+
+.intro-copy p {
+  font-size: clamp(12px, 3.5cqw, 16px);
+  line-height: 1.7;
+  color: #f4efdc;
+}
+
+.start {
+  width: 100%;
+  margin-top: 18px;
+  padding: 14px;
+  background: #f0d797;
+  color: #284438;
+}
+
+/* 문제 1: 상자 열기 */
+.puzzle {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6%;
+  padding: 6%;
+  background:
+    radial-gradient(circle at top, #fff7d9, transparent 65%),
+    #e7ecdf;
+}
+
+.clue {
+  padding: 8px 14px;
+  border: 1px dashed #b4a47c;
+  border-radius: 9px;
+  background: #fffdf2;
+  font-size: clamp(12px, 3.8cqw, 17px);
+  text-align: center;
+}
+
+.box-illustration {
+  width: 45%;
+  aspect-ratio: 1.4;
+  position: relative;
+  display: grid;
+  place-items: center;
+  background: #ad7552;
+  border: 5px solid #81573c;
+  border-radius: 8px;
+  box-shadow: 0 10px 0 #79513822;
+  font-size: clamp(28px, 11cqw, 50px);
+  color: #ffe2a0;
+}
+
+.box-illustration::before {
+  content: "";
+  position: absolute;
+  top: -9px;
+  left: -10px;
+  right: -10px;
+  height: 16px;
+  border: 3px solid #81573c;
+  border-radius: 5px;
+  background: #c18b62;
+}
+
+.lock {
+  display: flex;
+  gap: 10px;
+}
+
+.wheel-group {
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+}
+
+.wheel {
+  width: clamp(50px, 17cqw, 78px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 6px double #baa05f;
+  background: #fff7de;
+  color: #365347;
+  font-size: clamp(24px, 9cqw, 39px);
+}
+
+.wheel-arrow {
+  border: 0;
+  border-radius: 5px;
+  padding: 2px 14px;
+  background: #d7e2cf;
+  color: #365347;
+}
+
+.puzzle-note {
+  font-size: clamp(10px, 3cqw, 13px);
+  text-align: center;
+  color: var(--muted);
+}
+
+/* 問題2：서울 풍경 조각 */
+.landscape {
+  width: 100%;
+  padding: 10px;
+  background: #faf7e8;
+  border: 1px solid #cdd7c4;
+  border-radius: 12px;
+}
+
+.landscape-title {
+  text-align: center;
+  font-size: clamp(10px, 3cqw, 13px);
+  margin-bottom: 10px;
+  color: var(--muted);
+}
+
+.landscape-slots,
+.landscape-pieces {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+.landscape-slot {
+  aspect-ratio: .85;
+  border: 2px dashed #9cac91;
+  border-radius: 8px;
+  padding: 0;
+  overflow: hidden;
+  background: #e1e8da;
+  color: #6b8167;
+  font-size: 20px;
+}
+
+.landscape-pieces {
+  margin-top: 10px;
+}
+
+.landscape-piece {
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 0;
+  aspect-ratio: .85;
+  overflow: hidden;
+  background: white;
+}
+
+.landscape-piece.selected {
+  border-color: #d97c78;
+  box-shadow: 0 0 0 3px #d97c7833;
+}
+
+.landscape-piece.used {
+  opacity: .3;
+}
+
+.landscape-piece svg,
+.landscape-slot svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .stage {
+    animation: appear .25s ease;
+  }
+
+  @keyframes appear {
+    from { opacity: .6; }
+    to { opacity: 1; }
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="viewport">
+  <main class="game" aria-label="별이 기억하는 겨울 게임">
+
+    <header class="topbar">
+      <span class="brand">SEOUL GALLERY</span>
+
+      <div class="top-actions">
+        <span class="counter" id="pageCounter"></span>
+        <button
+          class="icon-button"
+          id="homeButton"
+          aria-label="처음 화면으로"
+        >⌂</button>
+      </div>
+    </header>
+
+    <section class="chapter">
+      <small id="chapterLabel"></small>
+      <h1 id="chapterTitle"></h1>
+    </section>
+
+    <section class="stage" id="stage"></section>
+
+    <section class="dialogue" aria-label="캐릭터 대화">
+      <div class="speaker">
+        <span class="speaker-dot" id="speakerDot"></span>
+        <span id="speakerName"></span>
+      </div>
+
+      <div
+        class="dialogue-text"
+        id="dialogueText"
+        aria-live="polite"
+      ></div>
+
+      <div class="dialogue-actions">
+        <span class="dialogue-progress" id="dialogueProgress"></span>
+        <button class="primary" id="nextButton">다음</button>
+      </div>
+    </section>
+
+    <section class="intro" id="intro">
+      <div id="introArt" style="height:100%"></div>
+
+      <div class="intro-copy">
+        <small>해치와 소울프렌즈의 크리스마스 모험</small>
+        <h2>별이 기억하는<br>겨울</h2>
+        <p>잠들어 있던 작은 별에게<br>어떤 이야기가 기다리고 있을까요?</p>
+
+        <button class="primary start" id="startButton">
+          해치 만나러 가기
+        </button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
 <script>
-// 현장 적용 시 SCENES의 단서·대사·정답을 교체합니다. 서버·외부 파일 없이 실행됩니다.
-const KEY='seoul-christmas-mail-v1';
-const SCENES=[
-{place:'크리스마스 우체국',title:'받는 사람이 사라졌어요',who:'해치',say:'분명 오늘 배달해야 하는 편지인데… 이름도 주소도 없어! 나랑 편지의 주인을 찾아주지 않을래?'},
-{place:'내친구서울 2관',title:'편지가 지나온 길',who:'청룡',say:'도장을 따라가면 되는 거지? 그런데 순서가 뒤죽박죽이야!'},
-{place:'내친구서울 1관',title:'서울에 도착한 편지',who:'백호',say:'여기까지 왔으면 직접 찾아보자! 지도에 남은 메모대로 길을 이어봐.'},
-{place:'서울책방',title:'글자 사이에 숨은 답장',who:'주작',say:'이건 빈 종이가 아니야. 가방에 있던 해독 렌즈부터 꺼내봐!'},
-{place:'소망나무',title:'서로 다른 소망, 하나의 편지',who:'현무',say:'편지가 여러 사람을 가리켰던 이유… 여기에서 알 것 같아. 도장을 겹쳐볼까?'},
-{place:'크리스마스 트리',title:'마지막 수신인',who:'해치',say:'우리, 드디어 편지 주인을 찾은 것 같아. 처음의 봉투를 다시 열어보자!'}];
-let state={unlocked:0,finished:false};try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&Number.isInteger(s.unlocked)&&s.unlocked>=0&&s.unlocked<=5)state={unlocked:s.unlocked,finished:s.finished===true&&s.unlocked===5}}catch(e){}
-let page=state.unlocked,order=[],path=[],lensOn=false,offset=90;
-const $=s=>document.querySelector(s);const app=$('#app');
-function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
-function msg(t,ok=false){$('#status').textContent=t;$('#status').className='status'+(ok?' ok':'')}
-function shell(body){const s=SCENES[page];app.innerHTML=`<div class="topline"><span>CHRISTMAS POST / ${String(page).padStart(2,'0')}</span><span class="tag">${s.place}</span></div><h2>${s.title}</h2><div class="speech"><b>${s.who}의 메시지</b>${s.say}</div>${body}<div id="status" class="status" role="status" aria-live="polite"></div>`;nav()}
-function clue(t){return `<details class="scene"><summary>현장 단서 보기 · 시안용</summary><p>${t}</p><span class="note">실제 운영에서는 이 정보를 현장 전시·안내물에서 찾게 됩니다.</span></details>`}
-function controls(hint){return `<div class="actions"><button class="primary" id="check">확인하기</button><button class="secondary" id="hint">힌트</button></div><div id="help" hidden class="help">${hint}</div>`}
-function bindHint(){$('#hint').onclick=()=>{$('#help').hidden=!$('#help').hidden}}
-function nav(){$('#route').innerHTML=SCENES.map((s,i)=>`<li class="${i===page?'active':i<state.unlocked?'done':''}"><button data-page="${i}" ${i>state.unlocked?'disabled':''}><span class="dot">${i<state.unlocked?'✓':i+1}</span>${['시작','세계','서울','책방','소망','배달'][i]}</button></li>`).join('');document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{page=+b.dataset.page;render()});$('#bag').innerHTML=['별','달','눈'].map((s,i)=>`<span class="stamp ${state.unlocked>i+1?'':'empty'}">${state.unlocked>i+1?s:'·'}</span>`).join('')+(state.unlocked>=3?'<span class="stamp">렌즈</span>':'')}
-function complete(text){state.unlocked=Math.max(state.unlocked,page+1);save();nav();msg(text,true);$('#check').disabled=true;const b=document.createElement('button');b.className='primary';b.textContent='다음 장소로 →';b.onclick=()=>{page++;render();app.scrollIntoView({behavior:'smooth',block:'start'})};app.appendChild(b)}
-function render(){order=[];path=[];lensOn=false;offset=90;$('#snow').innerHTML='';
-if(page===0){shell(`<p>서울갤러리에 도착한 편지 한 통.<br>봉투에는 이상한 우편 도장 세 개만 남아 있습니다.</p><div class="envelope"><div class="seal">✦</div>TO. 알 수 없는 수신인</div><p class="muted">4개의 장소에서 단서를 찾고, 마지막 편지를 배달하세요.<br>가방의 도장과 도구는 뒤의 문제에서 다시 쓰입니다.</p><button class="primary" id="start">임시 배달대원 되기 →</button>`);$('#start').onclick=()=>{state.unlocked=Math.max(1,state.unlocked);save();page=1;render()}}
-if(page===1){shell(`<p>우편 도장을 <b>먼저 찍힌 순서대로</b> 선택하세요.</p>${clue('우편 기록: “별 다음에는 달이 떴고, 마지막에는 눈이 내렸다.”')}<div class="slots" id="slots">아래 도장을 차례로 눌러주세요.</div><div class="choices">${['눈','별','달'].map(s=>`<button class="choice" data-stamp="${s}">${s==='별'?'✦':s==='달'?'☾':'❄'} ${s}</button>`).join('')}</div><button class="textbtn" id="clear">순서 지우기</button>${controls('문장의 등장 순서를 읽어보세요. 별 → 달 → 눈입니다.')}`);document.querySelectorAll('[data-stamp]').forEach(b=>b.onclick=()=>{order.push(b.dataset.stamp);b.disabled=true;$('#slots').textContent=order.join(' → ')});$('#clear').onclick=()=>render();$('#check').onclick=()=>order.join(',')==='별,달,눈'?complete('우편 기록 복원 완료! 별 도장을 가방에 넣었어요.'):msg('도장의 순서가 기록과 달라요. 단서를 다시 살펴보세요.');bindHint()}
-if(page===2){shell(`<p>출발점부터 도착점까지 <b>세 장소</b>를 차례로 눌러 배달 경로를 이으세요.</p>${clue('배달 메모: “책방에서 출발해 바로 동쪽 광장으로. 그곳에서 남쪽의 나무로.” 지도 위쪽이 북쪽입니다.')}<div class="map">${['우체국','정원','다리','책방','광장','전망대','카페','나무','극장'].map(s=>`<button data-node="${s}">${s}</button>`).join('')}</div><div id="trail" class="slots">경로를 선택하세요.</div><button class="textbtn" id="clear">경로 지우기</button>${controls('책방 → 광장 → 나무. 한강 모양의 선은 이번 예시에서는 배경입니다.')}`);document.querySelectorAll('[data-node]').forEach(b=>b.onclick=()=>{if(path.length>=3)return;path.push(b.dataset.node);b.classList.add('selected');b.disabled=true;$('#trail').textContent=path.join(' → ')});$('#clear').onclick=()=>render();$('#check').onclick=()=>path.join(',')==='책방,광장,나무'?complete('경로 연결 완료! 달 도장과 해독 렌즈를 얻었어요.'):msg('메모의 방향과 출발점을 확인해 주세요.');bindHint()}
-if(page===3){shell(`<p>가방의 렌즈로 흐릿한 편지를 살펴보세요.</p>${clue('책방의 안내: “보이지 않는 문장은 빛을 모아 읽으세요. 마지막 두 글자가 다음 장소의 열쇠입니다.”')}<button class="secondary" id="tool">가방에서 해독 렌즈 꺼내기</button><div class="lensboard"><span class="cipher">소망이 모이는 나무</span><div class="lens" id="lens" hidden>소망이 모이는 나무</div></div><label class="muted" for="slide">렌즈 움직이기</label><input id="slide" class="range" type="range" min="0" max="100" value="50" disabled><input class="answer" id="answer" placeholder="찾아낸 두 글자를 입력하세요" aria-label="편지의 마지막 두 글자" autocomplete="off">${controls('렌즈를 오른쪽으로 옮기면 마지막 단어 ‘나무’가 보입니다.')}`);$('#lens').style.display='none';$('#tool').onclick=()=>{lensOn=true;$('#lens').style.display='flex';$('#slide').disabled=false;$('#tool').textContent='해독 렌즈 사용 중';$('#tool').disabled=true};$('#slide').oninput=e=>$('#lens').style.setProperty('--x',e.target.value+'%');$('#check').onclick=()=>!lensOn?msg('먼저 가방에서 해독 렌즈를 꺼내주세요.'):$('#answer').value.replace(/\s/g,'')==='나무'?complete('문장 해독 완료! 눈 도장을 얻었어요. 편지는 소망나무를 가리키고 있어요.'):msg('렌즈를 움직여 문장의 마지막 두 글자를 찾아주세요.');bindHint()}
-if(page===4){shell(`<p>가방에 모인 세 도장의 글자 조각을 <b>한 줄로 겹치세요.</b></p>${clue('나무에 걸린 고정 카드: “나를 위한 소망도, 너를 위한 소망도. 답장을 받는 사람은 우리 ○○.”')}<div class="stamps"><span class="stamp">✦ 별 도장</span><span class="stamp">☾ 달 도장</span><span class="stamp">❄ 눈 도장</span></div><div class="overlaybox"><div class="layer" style="clip-path:inset(0 0 65% 0)">우리 모두에게</div><div class="layer" id="layer2" style="clip-path:inset(35% 0 30% 0)">우리 모두에게</div><div class="layer" id="layer3" style="clip-path:inset(70% 0 0 0)">우리 모두에게</div></div><label for="align" class="muted">슬라이더로 도장 정렬하기</label><input class="range" id="align" type="range" min="-100" max="100" value="90"><input class="answer" id="answer" placeholder="카드의 빈칸 두 글자" aria-label="답장을 받는 사람">${controls('슬라이더를 가운데로 옮기면 ‘우리 모두에게’가 완성됩니다. 빈칸은 ‘모두’입니다.')}`);const align=()=>{$('#layer2').style.transform=`translateX(${offset}px)`;$('#layer3').style.transform=`translateX(${-offset}px)`};align();$('#align').oninput=e=>{offset=+e.target.value;align()};$('#check').onclick=()=>Math.abs(offset)>7?msg('글자 조각이 아직 어긋나 있어요. 도장을 한 줄로 맞춰주세요.'):$('#answer').value.replace(/\s/g,'')!=='모두'?msg('완성된 문장과 현장 카드의 빈칸을 함께 확인해 주세요.'):complete('수신인 확인! 이 편지는 한 사람이 아닌, 우리 모두에게 보내는 답장이었어요.');bindHint()}
-if(page===5){shell(`<p>소망이 모여 만든 편지에는 한 사람의 이름을 적을 수 없었습니다. 그래서 우리의 도움이 필요했던 거예요.</p><div class="envelope"><div class="seal">✦</div>TO. 우리 모두에게</div><button class="primary" id="open">마지막 편지 열기</button><div id="ending"></div>`);$('#open').onclick=finish;if(state.finished)finish()}}
-function finish(){state.finished=true;save();$('#open').hidden=true;$('#ending').innerHTML='<div class="letter"><div class="eyebrow">DELIVERY COMPLETE</div><p>가족의 건강을 바랐던 당신에게,<br>새로운 시작을 준비하는 당신에게,<br>누군가와 함께이고 싶었던 당신에게.</p><p>당신이 남겨 준 마음은<br>이곳에 잘 도착했습니다.</p><p><b>누군가의 소망을 배달하러 온 당신에게도,<br>따뜻한 크리스마스가 도착했습니다.</b></p><p>— 해치와 소울프렌즈</p></div><div class="tree">✧<br>♧</div><p style="text-align:center" class="muted">마지막 배달 완료 · 임시 배달대원 미션 성공</p>';
-$('#snow').innerHTML=Array.from({length:22},(_,i)=>`<i style="left:${i*4.7}%;animation-delay:${-i*.6}s;animation-duration:${5+i%4}s">${i%2?'·':'✦'}</i>`).join('')}
-$('#reset').onclick=()=>{if(confirm('모은 단서와 진행 기록을 지우고 처음부터 시작할까요?')){state={unlocked:0,finished:false};page=0;save();render()}};render();
-</script></body></html>
+(() => {
+  "use strict";
+
+  /*
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    이미지 설정
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    생성한 이미지를 업로드한 뒤 아래 빈 문자열에
+    이미지 URL 또는 실제 서비스의 이미지 경로를 넣으세요.
+
+    이미지가 없거나 불러오지 못하면 임시 화면을 표시합니다.
+
+    길 안내 이미지는 실제 동선이 반영된 지도·사진을 넣으세요.
+    아래 안내 문구도 현장 확인 후 변경해야 합니다.
+  */
+  const ASSETS = {
+    intro: "",
+
+    welcome: "",
+
+    boxGuide: "",
+    boxScene: "",
+
+    starAwake: "",
+
+    seoulGuide: "",
+    seoulScene: ""
+  };
+
+  const ROUTES = {
+    box: {
+      name: "장식 상자를 둔 곳",
+      detail: "현장 안내 표식을 따라 이동해 주세요.",
+      image: "boxGuide"
+    },
+
+    seoul: {
+      name: "내친구서울 1관",
+      detail: "서울도시모형이 보이는 곳으로 이동해 주세요.",
+      image: "seoulGuide"
+    }
+  };
+
+  const CHARACTERS = {
+    "해치": { color: "#ed94b4" },
+    "백호": { color: "#b9a5df" },
+    "청룡": { color: "#78c9e5" },
+    "주작": { color: "#e56b52" },
+    "현무": { color: "#86b9a5" },
+    "별":   { color: "#e5bc61" },
+    "안내": { color: "#8eaa92" }
+  };
+
+  /*
+    페이지 구성:
+    인트로 → 대화 → 장소 안내 → 문제 → 대화 →
+    장소 안내 → 문제 → 해결 대화
+
+    다음 챕터도 story / guide / puzzle 순서로 추가하면 됩니다.
+  */
+  const PAGES = [
+    {
+      type: "story",
+      label: "프롤로그",
+      title: "크리스마스 준비를 도와줘!",
+      image: "welcome",
+      symbol: "✦",
+
+      lines: [
+        {
+          who: "해치",
+          text:
+            "안녕! 서울갤러리에 놀러 왔구나.\n나랑 크리스마스 준비 좀 도와줄래?"
+        },
+        {
+          who: "해치",
+          text:
+            "친구들은 트리를 세우고 있어.\n나는 장식 상자를 가져가기로 했는데……"
+        },
+        {
+          who: "해치",
+          text:
+            "상자를 둔 곳부터 같이 가 보자!"
+        }
+      ],
+
+      nextLabel: "해치 따라가기"
+    },
+
+    {
+      type: "guide",
+      label: "첫 번째 장소",
+      title: "장식 상자를 찾아서",
+      route: "box",
+
+      lines: [
+        {
+          who: "해치",
+          text:
+            "창고에서 꺼낸 상자를 여기 뒀다고 했어.\n어떤 상자인지 표시를 찾아보자."
+        },
+        {
+          who: "해치",
+          text:
+            "표식이 있는 곳에 도착했어?\n그럼 상자를 살펴볼까?"
+        }
+      ],
+
+      nextLabel: "도착했어요"
+    },
+
+    {
+      type: "puzzle",
+      puzzle: "box",
+      label: "첫 번째 문제",
+      title: "장식 상자를 열어라!",
+
+      lines: [
+        {
+          who: "해치",
+          text:
+            "장식 상자가 잠겨 있네?\n표식 순서에 맞게 원판을 돌려 줄래?"
+        }
+      ]
+    },
+
+    {
+      type: "story",
+      label: "첫 번째 기억",
+      title: "오래된 별이 눈을 뜨다",
+      image: "starAwake",
+      symbol: "★",
+
+      lines: [
+        {
+          who: "백호",
+          text:
+            "해치! 트리는 준비됐어.\n상자도 찾았구나. 이제 장식을 달자!"
+        },
+        {
+          who: "해치",
+          text:
+            "어? 이 별은 끈이 해졌네.\n새 끈을 달아서 조심히 걸어 줄게."
+        },
+        {
+          who: "별",
+          text:
+            "음…… 이렇게 환한 건 오랜만이네."
+        },
+        {
+          who: "해치",
+          text:
+            "우리가 깨웠구나!\n여기는 서울갤러리야. 오래 자고 있었어?"
+        },
+        {
+          who: "별",
+          text:
+            "잘 모르겠어……\n나는 작은 창문 옆에 있었던 것 같은데."
+        },
+        {
+          who: "별",
+          text:
+            "곁에서 이야기를 들려주던 친구도 있었어.\n지금도 잘 지내고 있을까?"
+        },
+        {
+          who: "해치",
+          text:
+            "소중한 친구였구나.\n기억나는 풍경부터 같이 찾아보자."
+        },
+        {
+          who: "별",
+          text:
+            "밤이면 창밖으로\n길게 반짝이는 강이 보였어."
+        },
+        {
+          who: "백호",
+          text:
+            "그럼 서울을 한눈에 볼 수 있는 곳으로!\n내가 앞장설게!"
+        }
+      ],
+
+      nextLabel: "서울 풍경 찾으러 가기"
+    },
+
+    {
+      type: "guide",
+      label: "두 번째 장소",
+      title: "별이 바라보던 서울",
+      route: "seoul",
+
+      lines: [
+        {
+          who: "해치",
+          text:
+            "내친구서울 1관으로 가 보자.\n서울도시모형에서 별의 기억을 찾아볼 거야."
+        },
+        {
+          who: "백호",
+          text:
+            "강과 건물들이 작게 보이는 곳이야.\n도착하면 함께 살펴보자!"
+        }
+      ],
+
+      nextLabel: "도착했어요"
+    },
+
+    {
+      type: "puzzle",
+      puzzle: "seoul",
+      label: "두 번째 문제",
+      title: "흩어진 풍경을 이어 줘",
+
+      lines: [
+        {
+          who: "해치",
+          text:
+            "별의 기억이 조각조각 흩어졌어.\n강이 끊기지 않도록 풍경을 이어 줄래?"
+        }
+      ]
+    },
+
+    {
+      type: "story",
+      label: "두 번째 기억",
+      title: "작은 창문 너머로",
+      image: "seoulScene",
+      symbol: "⌂",
+
+      lines: [
+        {
+          who: "별",
+          text:
+            "맞아, 이런 풍경이었어!\n나는 창문 안에서 한강을 바라봤어."
+        },
+        {
+          who: "해치",
+          text:
+            "하나씩 기억나고 있네.\n그 창문이 있던 동네도 찾아볼까?"
+        },
+        {
+          who: "백호",
+          text:
+            "좋아! 다음에는 서울책방으로 가 보자!"
+        },
+        {
+          who: "안내",
+          text:
+            "여기까지가 현재 제작된 체험 구간입니다.\n다음에는 서울책방의 기억이 이어집니다."
+        }
+      ],
+
+      nextLabel: "처음 화면으로",
+      end: true
+    }
+  ];
+
+  const $ = (selector) => document.querySelector(selector);
+
+  const elements = {
+    intro: $("#intro"),
+    stage: $("#stage"),
+    chapterLabel: $("#chapterLabel"),
+    chapterTitle: $("#chapterTitle"),
+    speakerName: $("#speakerName"),
+    speakerDot: $("#speakerDot"),
+    text: $("#dialogueText"),
+    progress: $("#dialogueProgress"),
+    next: $("#nextButton"),
+    counter: $("#pageCounter")
+  };
+
+  let pageIndex = 0;
+  let lineIndex = 0;
+  let puzzleSolved = false;
+
+  function escapeHTML(value) {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;");
+  }
+
+  function imageMarkup(key, fallbackTitle, symbol = "✦", contain = false) {
+    const source = ASSETS[key];
+
+    const fallback = `
+      <div class="placeholder">
+        <div class="symbol">${symbol}</div>
+        <p>${escapeHTML(fallbackTitle)}</p>
+      </div>
+    `;
+
+    if (!source) return fallback;
+
+    return `
+      ${fallback}
+      <img
+        class="art ${contain ? "contain" : ""}"
+        src="${escapeHTML(source)}"
+        alt="${escapeHTML(fallbackTitle)}"
+        style="position:absolute;inset:0"
+      >
+    `;
+  }
+
+  function handleImageErrors(root) {
+    root.querySelectorAll("img").forEach((image) => {
+      image.addEventListener("error", () => {
+        image.remove();
+      }, { once: true });
+    });
+  }
+
+  function currentPage() {
+    return PAGES[pageIndex];
+  }
+
+  function showSpeech(who, text) {
+    elements.speakerName.textContent = who;
+    elements.speakerDot.style.background =
+      CHARACTERS[who]?.color || "#86b9a5";
+
+    elements.text.textContent = text;
+    elements.text.scrollTop = 0;
+  }
+
+  function updateSpeech() {
+    const page = currentPage();
+    const line = page.lines[lineIndex];
+
+    showSpeech(line.who, line.text);
+
+    elements.progress.textContent =
+      `${lineIndex + 1} / ${page.lines.length}`;
+
+    const isLast = lineIndex === page.lines.length - 1;
+
+    elements.next.textContent = isLast
+      ? page.nextLabel || "다음 장소로"
+      : "다음";
+  }
+
+  function setPage(index) {
+    pageIndex = index;
+    lineIndex = 0;
+    puzzleSolved = false;
+
+    const page = currentPage();
+
+    elements.chapterLabel.textContent = page.label;
+    elements.chapterTitle.textContent = page.title;
+    elements.counter.textContent =
+      `${pageIndex + 1} / ${PAGES.length}`;
+
+    elements.next.disabled = false;
+
+    if (page.type === "story") {
+      renderStory(page);
+      updateSpeech();
+    }
+
+    if (page.type === "guide") {
+      renderGuide(page);
+      updateSpeech();
+    }
+
+    if (page.type === "puzzle") {
+      renderPuzzle(page);
+    }
+
+    handleImageErrors(elements.stage);
+  }
+
+  function renderStory(page) {
+    elements.stage.innerHTML = imageMarkup(
+      page.image,
+      page.title,
+      page.symbol
+    );
+  }
+
+  function renderGuide(page) {
+    const route = ROUTES[page.route];
+
+    elements.stage.innerHTML = `
+      ${imageMarkup(route.image, route.name, "➜", true)}
+
+      <div class="scene-label">다음 장소를 찾아가세요</div>
+
+      <div class="direction-card">
+        <strong>📍 ${escapeHTML(route.name)}</strong>
+        <p>${escapeHTML(route.detail)}</p>
+      </div>
+    `;
+  }
+
+  function renderPuzzle(page) {
+    showSpeech(page.lines[0].who, page.lines[0].text);
+
+    elements.progress.textContent = "문제를 풀어 주세요";
+    elements.next.textContent = "정답 확인";
+
+    if (page.puzzle === "box") {
+      renderBoxPuzzle();
+    }
+
+    if (page.puzzle === "seoul") {
+      renderSeoulPuzzle();
+    }
+  }
+
+  function finishPuzzle(text) {
+    puzzleSolved = true;
+
+    showSpeech("해치", text);
+
+    elements.progress.textContent = "✓ 미션 성공";
+    elements.next.textContent = "이야기 이어 보기";
+  }
+
+  let checkPuzzle = () => {};
+
+  /*
+    첫 번째 문제: 기호 자물쇠
+    실제 운영에서는 clueSymbols와 정답을 현장 표식에 맞게 교체하세요.
+  */
+  function renderBoxPuzzle() {
+    const symbols = ["★", "☾", "❄", "●"];
+    const answer = [0, 1, 2];
+    const values = [3, 3, 3];
+
+    elements.stage.innerHTML = `
+      <div class="puzzle">
+        <div class="clue">상자의 표식　★ → ☾ → ❄</div>
+
+        <div class="box-illustration" id="boxSymbol">✦</div>
+
+        <div class="lock">
+          ${values.map((_, index) => `
+            <div class="wheel-group">
+              <button
+                class="wheel-arrow"
+                data-wheel="${index}"
+                data-step="-1"
+                aria-label="${index + 1}번째 원판 이전 기호"
+              >↶</button>
+
+              <button
+                class="wheel"
+                id="wheel${index}"
+                data-wheel="${index}"
+                data-step="1"
+                aria-label="${index + 1}번째 원판 돌리기"
+              >●</button>
+
+              <button
+                class="wheel-arrow"
+                data-wheel="${index}"
+                data-step="1"
+                aria-label="${index + 1}번째 원판 다음 기호"
+              >↷</button>
+            </div>
+          `).join("")}
+        </div>
+
+        <div class="puzzle-note">
+          원판이나 화살표를 눌러 기호를 바꿔 보세요.
+        </div>
+      </div>
+    `;
+
+    elements.stage.querySelectorAll("[data-wheel]").forEach((button) => {
+      button.addEventListener("click", () => {
+        if (puzzleSolved) return;
+
+        const index = Number(button.dataset.wheel);
+        const step = Number(button.dataset.step);
+
+        values[index] =
+          (values[index] + step + symbols.length) % symbols.length;
+
+        $("#wheel" + index).textContent = symbols[values[index]];
+      });
+    });
+
+    checkPuzzle = () => {
+      const correct = values.every(
+        (value, index) => value === answer[index]
+      );
+
+      if (correct) {
+        $("#boxSymbol").textContent = "★";
+
+        finishPuzzle(
+          "철컥! 상자가 열렸어.\n친구들이 기다리는 트리로 가져가자!"
+        );
+      } else {
+        showSpeech(
+          "해치",
+          "어라, 아직 잠겨 있네.\n괜찮아! 위의 표식 순서와 다시 비교해 보자."
+        );
+      }
+    };
+  }
+
+  /*
+    두 번째 문제: 풍경 세 조각 연결
+    좌우 강의 높이가 자연스럽게 이어지도록 배열합니다.
+  */
+  function landscapeSVG(piece) {
+    const rivers = [
+      "M-10 130 C25 130 45 90 110 90",
+      "M-10 90 C35 90 60 140 110 140",
+      "M-10 140 C40 140 65 105 110 105"
+    ];
+
+    const skylines = [
+      `<rect x="12" y="49" width="18" height="45" fill="#83a396"/>
+       <rect x="35" y="32" width="20" height="60" fill="#557b73"/>
+       <rect x="62" y="56" width="15" height="37" fill="#b1be9b"/>`,
+
+      `<path d="M50 12V70" stroke="#687b79" stroke-width="3"/>
+       <path d="M42 32H58L54 43H46Z" fill="#b79472"/>
+       <path d="M20 79Q50 50 85 81" fill="#8ead8f"/>`,
+
+      `<rect x="12" y="50" width="18" height="48" fill="#90aaa0"/>
+       <rect x="39" y="38" width="24" height="57" fill="#b9b38c"/>
+       <rect x="73" y="61" width="17" height="37" fill="#648b80"/>`
+    ];
+
+    return `
+      <svg
+        viewBox="0 0 100 180"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <rect width="100" height="180" fill="#f6e8bd"/>
+        <circle cx="78" cy="22" r="11" fill="#fff6dc"/>
+        ${skylines[piece]}
+        <path
+          d="${rivers[piece]}"
+          stroke="#91c8d4"
+          stroke-width="28"
+          fill="none"
+        />
+        <path
+          d="${rivers[piece]}"
+          stroke="#e7f5ed"
+          stroke-width="2"
+          fill="none"
+          stroke-dasharray="3 7"
+        />
+        <rect y="158" width="100" height="22" fill="#d6ddbd"/>
+      </svg>
+    `;
+  }
+
+  function renderSeoulPuzzle() {
+    let selected = null;
+    let placements = [null, null, null];
+
+    const trayOrder = [2, 0, 1];
+
+    elements.stage.innerHTML = `
+      <div class="puzzle">
+        <div class="clue">강이 끊기지 않게 이어 주세요</div>
+
+        <div class="landscape">
+          <div class="landscape-title">별이 바라보던 풍경</div>
+
+          <div class="landscape-slots">
+            ${[0, 1, 2].map((index) => `
+              <button
+                class="landscape-slot"
+                data-slot="${index}"
+                aria-label="${index + 1}번째 풍경 자리"
+              >＋</button>
+            `).join("")}
+          </div>
+        </div>
+
+        <div class="landscape-pieces">
+          ${trayOrder.map((piece) => `
+            <button
+              class="landscape-piece"
+              data-piece="${piece}"
+              aria-label="${piece + 1}번 풍경 조각 선택"
+            >${landscapeSVG(piece)}</button>
+          `).join("")}
+        </div>
+
+        <button class="secondary" id="clearLandscape">
+          다시 놓기
+        </button>
+
+        <div class="puzzle-note">
+          아래 조각을 선택한 뒤, 위쪽 빈자리를 눌러 주세요.
+        </div>
+      </div>
+    `;
+
+    function paint() {
+      elements.stage.querySelectorAll("[data-slot]").forEach((slot) => {
+        const index = Number(slot.dataset.slot);
+        const piece = placements[index];
+
+        slot.innerHTML = piece === null
+          ? "＋"
+          : landscapeSVG(piece);
+      });
+
+      elements.stage.querySelectorAll("[data-piece]").forEach((button) => {
+        const piece = Number(button.dataset.piece);
+
+        button.classList.toggle("selected", selected === piece);
+        button.classList.toggle("used", placements.includes(piece));
+      });
+    }
+
+    elements.stage.querySelectorAll("[data-piece]").forEach((button) => {
+      button.addEventListener("click", () => {
+        if (puzzleSolved) return;
+
+        selected = Number(button.dataset.piece);
+        paint();
+      });
+    });
+
+    elements.stage.querySelectorAll("[data-slot]").forEach((slot) => {
+      slot.addEventListener("click", () => {
+        if (puzzleSolved) return;
+
+        const index = Number(slot.dataset.slot);
+
+        if (selected === null) {
+          if (placements[index] !== null) {
+            selected = placements[index];
+            placements[index] = null;
+          }
+        } else {
+          placements = placements.map(
+            (piece) => piece === selected ? null : piece
+          );
+
+          placements[index] = selected;
+          selected = null;
+        }
+
+        paint();
+      });
+    });
+
+    $("#clearLandscape").addEventListener("click", () => {
+      if (puzzleSolved) return;
+
+      selected = null;
+      placements = [null, null, null];
+      paint();
+    });
+
+    checkPuzzle = () => {
+      const correct = placements.every(
+        (piece, index) => piece === index
+      );
+
+      if (correct) {
+        finishPuzzle(
+          "풍경이 하나로 이어졌어!\n별도 무언가 떠올린 것 같아."
+        );
+      } else {
+        showSpeech(
+          "해치",
+          "강이 중간에서 끊기는 곳은 없을까?\n조각 양옆의 물길 높이를 살펴봐."
+        );
+      }
+    };
+  }
+
+  function startGame() {
+    elements.intro.hidden = true;
+    setPage(0);
+  }
+
+  function returnToIntro() {
+    elements.intro.hidden = false;
+  }
+
+  elements.next.addEventListener("click", () => {
+    const page = currentPage();
+
+    if (page.type === "puzzle") {
+      if (!puzzleSolved) {
+        checkPuzzle();
+        return;
+      }
+
+      setPage(pageIndex + 1);
+      return;
+    }
+
+    if (lineIndex < page.lines.length - 1) {
+      lineIndex += 1;
+      updateSpeech();
+      return;
+    }
+
+    if (page.end) {
+      returnToIntro();
+      return;
+    }
+
+    setPage(pageIndex + 1);
+  });
+
+  $("#startButton").addEventListener("click", startGame);
+
+  $("#homeButton").addEventListener("click", () => {
+    if (confirm("처음 화면으로 돌아갈까요?")) {
+      returnToIntro();
+    }
+  });
+
+  $("#introArt").innerHTML = imageMarkup(
+    "intro",
+    "별이 기억하는 겨울",
+    "✦"
+  );
+
+  handleImageErrors($("#introArt"));
+  setPage(0);
+})();
+</script>
+</body>
+</html>
