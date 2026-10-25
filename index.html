@@ -2,185 +2,680 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>별이 기억하는 겨울</title>
+
 <style>
 /*
-  이미지 URL은 아래 CONFIG.images / CONFIG.characters에 입력합니다.
+  파일 구성
+  ├─ index.html
+  ├─ image_01.png  장식 상자 찾기
+  ├─ image_02.png  별 깨우기
+  ├─ image_03.png  서울 전경
+  ├─ image_04.png  서울책방
+  ├─ image_05.png  공연장
+  ├─ image_06.png  소망나무
+  └─ image_07.png  별빛 엔딩
 
-  세로 비율:
-  요청하신 5:10:65:30은 합계 110이므로 상대 비율로 적용합니다.
-  대화창 아래 테스트용 패스 버튼은 별도 영역입니다.
+  대화 화면: 상단 / 제목 / 이미지 / 대화 = 5:10:65:30
+  문제 화면: 하단 대화창 없이 문제 영역을 확장합니다.
 */
+
 :root{
-  --paper:#fffaf0;--green:#254e43;--ink:#35483f;
-  --muted:#758277;--gold:#e6bd69;--pink:#ed94b4;
+  --bg:#f4dce7;
+  --paper:#fff5f9;
+  --pink:#d46494;
+  --pink-dark:#99476e;
+  --pink-light:#f9dfe9;
+  --ink:#674659;
+  --muted:#a47f92;
+  --line:#edd0de;
+  --gold:#dfb35a;
 }
+
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;height:100%}
 body{
-  display:grid;place-items:center;overflow:hidden;background:#e4e9df;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  background:var(--bg);
   color:var(--ink);
   font-family:"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
 }
 button,input,textarea{font:inherit}
-button{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-button:disabled{cursor:default;opacity:.4}
-button:focus-visible,canvas:focus-visible{outline:3px solid #d58c40;outline-offset:3px}
+button{
+  cursor:pointer;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}
+button:disabled{cursor:default;opacity:.45}
+button:focus-visible,canvas:focus-visible{
+  outline:3px solid #bd668c;
+  outline-offset:3px;
+}
 [hidden]{display:none!important}
+
 .viewport{
-  width:100%;height:100%;height:100dvh;display:grid;place-items:center;
-  padding:max(5px,env(safe-area-inset-top))
-          max(5px,env(safe-area-inset-right))
-          max(5px,env(safe-area-inset-bottom))
-          max(5px,env(safe-area-inset-left));
+  width:100%;
+  height:100%;
+  height:100dvh;
+  display:grid;
+  place-items:center;
+  padding:
+    max(5px,env(safe-area-inset-top))
+    max(5px,env(safe-area-inset-right))
+    max(5px,env(safe-area-inset-bottom))
+    max(5px,env(safe-area-inset-left));
 }
 .game{
-  width:min(100%,480px,calc(
-    (100dvh - max(5px,env(safe-area-inset-top))
-    - max(5px,env(safe-area-inset-bottom))) / 1.65));
-  aspect-ratio:1/1.65;position:relative;overflow:hidden;
-  background:var(--paper);border-radius:18px;
-  box-shadow:0 15px 60px #243c3222;container-type:inline-size;
-  display:grid;grid-template-rows:minmax(0,1fr) auto;
+  width:min(
+    100%,
+    480px,
+    calc(
+      (
+        100dvh
+        - max(5px,env(safe-area-inset-top))
+        - max(5px,env(safe-area-inset-bottom))
+      ) / 1.65
+    )
+  );
+  aspect-ratio:1/1.65;
+  display:grid;
+  grid-template-rows:minmax(0,1fr) auto;
+  position:relative;
+  overflow:hidden;
+  background:var(--paper);
+  border-radius:20px;
+  box-shadow:0 15px 60px #9a50732a;
+  container-type:inline-size;
 }
 .screen{
-  min-height:0;display:grid;
-  grid-template-rows:minmax(0,5fr) minmax(0,10fr) minmax(0,65fr) minmax(0,30fr);
+  min-height:0;
+  display:grid;
+  grid-template-rows:
+    minmax(0,5fr)
+    minmax(0,10fr)
+    minmax(0,65fr)
+    minmax(0,30fr);
+}
+.screen.puzzle-mode{
+  grid-template-rows:
+    minmax(0,5fr)
+    minmax(0,10fr)
+    minmax(0,95fr);
 }
 .topbar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 4%;border-bottom:1px solid #e5e6d9;min-height:0;
+  min-height:0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:0 4%;
+  border-bottom:1px solid var(--line);
 }
-.brand{font-size:clamp(8px,2.7cqw,12px);font-weight:800;letter-spacing:.08em}
-.topbar-right{display:flex;align-items:center;gap:8px}
-.counter{font-size:clamp(9px,2.7cqw,12px);color:var(--muted)}
-.home{background:none;border:0;color:var(--green);font-size:18px;padding:0 4px}
-.chapter{min-height:0;display:flex;flex-direction:column;justify-content:center;padding:1% 5%}
-.chapter small{font-size:clamp(8px,2.5cqw,11px);letter-spacing:.1em;color:#a77d42}
-.chapter h1{margin:3px 0 0;font-size:clamp(15px,4.8cqw,23px);line-height:1.3;letter-spacing:-.04em}
-.stage{min-height:0;position:relative;overflow:hidden;margin:0 3%;border-radius:13px;background:#e9ecdf}
-.visual{position:absolute;inset:0}
-.visual img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.visual.contain img{object-fit:contain;background:#eef0e6}
+.brand{
+  font-size:clamp(8px,2.6cqw,12px);
+  font-weight:800;
+  letter-spacing:.08em;
+}
+.top-right{display:flex;align-items:center;gap:8px}
+.counter{
+  font-size:clamp(9px,2.6cqw,12px);
+  color:var(--muted);
+}
+.home{
+  border:0;
+  padding:0 4px;
+  background:none;
+  color:var(--pink-dark);
+  font-size:18px;
+}
+.chapter{
+  min-height:0;
+  padding:1% 5%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.chapter small{
+  color:#b07793;
+  font-size:clamp(8px,2.5cqw,11px);
+  letter-spacing:.1em;
+}
+.chapter h1{
+  margin:3px 0 0;
+  font-size:clamp(15px,4.8cqw,23px);
+  line-height:1.3;
+  letter-spacing:-.045em;
+}
+.stage{
+  min-height:0;
+  position:relative;
+  overflow:hidden;
+  margin:0 3%;
+  border-radius:13px;
+  background:#f3dce6;
+}
+.puzzle-mode .stage{margin-bottom:3%}
+
+.art{position:absolute;inset:0}
+.art img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
 .fallback{
-  position:absolute;inset:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;padding:8%;text-align:center;
-  background:radial-gradient(circle at 50% 25%,#fff9df,transparent 65%),linear-gradient(150deg,#dcebdc,#f5e7d1);
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  padding:8%;
+  text-align:center;
+  background:
+    radial-gradient(circle at 50% 25%,#fff7e1,transparent 60%),
+    linear-gradient(145deg,#f9dce8,#f0d5e2);
 }
-.fallback .symbol{font-size:clamp(48px,22cqw,110px);color:#cba052;line-height:1.3}
-.fallback p{font-size:clamp(12px,3.6cqw,17px);line-height:1.6;margin:8px 0}
-.route{
-  position:absolute;left:5%;right:5%;bottom:5%;padding:4%;
-  background:#fffdf4f2;border-radius:10px;box-shadow:0 4px 18px #28463320;
+.fallback strong{
+  color:#d4a657;
+  font-size:clamp(60px,24cqw,115px);
 }
-.route strong{font-size:clamp(12px,3.8cqw,18px)}
-.route p{white-space:pre-line;font-size:clamp(10px,3cqw,14px);line-height:1.6;margin:6px 0 0}
+.fallback span{
+  font-size:clamp(12px,3.7cqw,17px);
+  line-height:1.6;
+}
+
 .dialogue{
-  min-height:0;display:grid;grid-template-columns:minmax(0,3fr) minmax(0,7fr);
-  gap:8px;padding:3% 4% 2%;border-top:1px solid #e6e6d7;
+  min-height:0;
+  display:grid;
+  grid-template-columns:minmax(0,3fr) minmax(0,7fr);
+  gap:8px;
+  padding:3% 4%;
 }
 .portrait{
-  min-width:0;min-height:0;display:flex;flex-direction:column;
-  justify-content:center;align-items:center;gap:3px;
+  min-height:0;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
 }
-.portrait-art{
-  width:100%;min-height:0;flex:1;position:relative;
-  display:grid;place-items:center;overflow:hidden;
+.portrait-image{
+  min-height:0;
+  width:100%;
+  flex:1;
+  position:relative;
+  display:grid;
+  place-items:center;
 }
-.portrait-art img{width:100%;height:100%;object-fit:contain}
-.portrait-art svg{width:90%;height:100%}
-.portrait-name{font-weight:800;font-size:clamp(10px,3.1cqw,14px)}
+.portrait-image img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+.portrait-image svg{width:94%;height:100%}
+.portrait-name{
+  font-size:clamp(10px,3.1cqw,14px);
+  font-weight:800;
+}
 .message{
-  min-width:0;min-height:0;display:grid;grid-template-rows:minmax(0,1fr) auto;
-  gap:5px;padding:5% 5% 4%;border:1px solid #e1e4d6;border-radius:11px;background:#fffdf7;
+  min-height:0;
+  min-width:0;
+  display:grid;
+  grid-template-rows:minmax(0,1fr) auto;
+  gap:4px;
+  padding:5%;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fffafd;
 }
 .message-text{
-  min-height:0;overflow-y:auto;overscroll-behavior:contain;
-  font-size:clamp(11px,3.65cqw,17px);line-height:1.6;
-  white-space:pre-line;word-break:keep-all;scrollbar-width:thin;
+  min-height:0;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scrollbar-width:thin;
+  font-size:clamp(11px,3.6cqw,17px);
+  line-height:1.65;
+  word-break:keep-all;
+  white-space:pre-line;
 }
-.message-actions{display:flex;justify-content:space-between;align-items:center;min-height:27px;gap:5px}
-.message-count{font-size:clamp(8px,2.4cqw,11px);color:var(--muted)}
+.message-text.narration{
+  color:#9a8590;
+  font-style:italic;
+}
+.message-actions{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:6px;
+  min-height:28px;
+}
+.message-count{
+  font-size:clamp(8px,2.4cqw,11px);
+  color:var(--muted);
+}
 .primary,.secondary{
-  border:0;border-radius:8px;padding:8px 12px;
-  font-size:clamp(10px,3.1cqw,14px);font-weight:700;
+  border:0;
+  border-radius:9px;
+  padding:9px 13px;
+  font-size:clamp(11px,3.2cqw,15px);
+  font-weight:700;
 }
-.primary{background:var(--green);color:white}
-.secondary{background:#e0e8d8;color:var(--green)}
+.primary{background:var(--pink);color:white}
+.secondary{background:#f3dce7;color:var(--pink-dark)}
+
 .testbar{
-  display:flex;justify-content:center;gap:10px;align-items:center;
-  padding:4px 10px 6px;border-top:1px dashed #d9dece;background:#eef1e5;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:8px;
+  padding:4px 8px 6px;
+  background:#f4deea;
+  border-top:1px dashed #dfb7cc;
 }
-.testbar span{font-size:9px;color:var(--muted)}
-.testbar button{border:1px solid #a5b6a2;border-radius:5px;background:#fffdf4;color:#52634e;padding:3px 10px;font-size:10px}
-.overlay{position:absolute;inset:0;z-index:10;overflow:hidden;background:#173b34}
-.overlay:after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 15%,#102e2a25 45%,#102e2aeb);pointer-events:none}
-.overlay-copy{position:absolute;z-index:1;left:8%;right:8%;bottom:7%;text-align:center;color:white}
-.overlay-copy small{font-size:clamp(9px,2.8cqw,13px);letter-spacing:.1em}
-.overlay-copy h2{font-size:clamp(25px,8.5cqw,41px);line-height:1.3;margin:13px 0;letter-spacing:-.05em}
-.overlay-copy p{font-size:clamp(11px,3.4cqw,16px);line-height:1.75;white-space:pre-line}
-.overlay-copy button{width:100%;margin-top:12px;padding:13px;background:#eed494;color:#294638}
-.overlay .fallback{background:radial-gradient(circle at 50% 25%,#f5d78455,transparent 35%),linear-gradient(#2c574a,#142f30)}
-.overlay .fallback p{display:none}
+.testbar span{font-size:9px;color:#aa7b94}
+.testbar button{
+  border:1px solid #d5adc3;
+  border-radius:5px;
+  padding:3px 9px;
+  background:#fff6fa;
+  color:#9b5b7b;
+  font-size:10px;
+}
+
+.overlay{
+  position:absolute;
+  inset:0;
+  z-index:20;
+  overflow:hidden;
+  background:#a35c7d;
+}
+.overlay::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(
+    transparent 20%,
+    #71375320 45%,
+    #713753ed
+  );
+}
+.overlay-copy{
+  position:absolute;
+  z-index:1;
+  left:8%;
+  right:8%;
+  bottom:7%;
+  text-align:center;
+  color:white;
+}
+.overlay-copy small{
+  font-size:clamp(9px,2.8cqw,13px);
+  letter-spacing:.1em;
+}
+.overlay-copy h2{
+  margin:13px 0;
+  font-size:clamp(28px,9cqw,43px);
+  line-height:1.3;
+  letter-spacing:-.06em;
+}
+.overlay-copy p{
+  font-size:clamp(11px,3.5cqw,16px);
+  line-height:1.8;
+  white-space:pre-line;
+}
+.overlay-copy button{
+  width:100%;
+  margin-top:12px;
+  padding:14px;
+  background:#ffe0ed;
+  color:#8a4165;
+}
+
+.guide-panel{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  padding:7%;
+  background:
+    radial-gradient(circle at top,#fff8ed,transparent 60%),
+    linear-gradient(145deg,#f9e2ec,#eed2e1);
+}
+.guide-kicker{
+  color:#bd779a;
+  font-size:clamp(10px,3cqw,13px);
+  letter-spacing:.12em;
+}
+.guide-destination{
+  margin:0;
+  text-align:center;
+  font-size:clamp(21px,6.2cqw,29px);
+  line-height:1.45;
+}
+.guide-arrow{
+  width:70px;
+  height:70px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#fff9fd;
+  color:#c16d96;
+  font-size:37px;
+  box-shadow:0 5px 20px #c17f9a15;
+}
+.guide-note{
+  padding:13px;
+  width:100%;
+  border:1px solid #dfb9cd;
+  border-radius:12px;
+  background:#fffbf5;
+  font-size:clamp(11px,3.4cqw,15px);
+  line-height:1.75;
+  text-align:center;
+  white-space:pre-line;
+}
+.guide-caption{
+  position:absolute;
+  bottom:4%;
+  left:5%;
+  right:5%;
+  padding:12px;
+  background:#fff6faf2;
+  border-radius:10px;
+  text-align:center;
+  font-size:clamp(11px,3.4cqw,15px);
+  line-height:1.6;
+}
+
 .puzzle{
-  position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;
-  gap:14px;padding:5%;background:radial-gradient(circle at top,#fff8dd,transparent 60%),#e7ecdf;
+  position:absolute;
+  inset:0;
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr) auto;
+  gap:10px;
+  padding:5%;
+  background:
+    radial-gradient(circle at top,#fff9eb,transparent 55%),
+    linear-gradient(145deg,#f9e0eb,#efd6e4);
+}
+.puzzle-heading{
+  padding:10px;
+  background:#fff8fcee;
+  border:1px solid #e4bfd2;
+  border-radius:10px;
+  text-align:center;
+}
+.puzzle-heading strong{
+  display:block;
+  font-size:clamp(13px,4cqw,18px);
+  line-height:1.4;
+}
+.puzzle-heading p{
+  margin:5px 0 0;
+  font-size:clamp(10px,3cqw,14px);
+  line-height:1.6;
+  white-space:pre-line;
+  color:#a1738c;
+}
+.puzzle-body{
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  overflow:auto;
+}
+.puzzle-footer{
+  display:grid;
+  justify-items:center;
+  gap:6px;
+}
+.puzzle-status{
+  margin:0;
+  min-height:32px;
+  text-align:center;
+  font-size:clamp(11px,3.3cqw,15px);
+  line-height:1.6;
+  white-space:pre-line;
+  color:#a4557a;
+}
+.puzzle-status.success{color:#8b5876;font-weight:700}
+.puzzle-footer .primary{width:100%;padding:12px}
+.puzzle-note{
+  font-size:clamp(9px,2.8cqw,13px);
+  color:#a17d91;
+  text-align:center;
+  line-height:1.6;
 }
 .rule{
-  background:#fffdf1;border:1px dashed #bcae86;border-radius:8px;
-  padding:7px 10px;text-align:center;font-size:clamp(11px,3.4cqw,16px);
+  padding:9px 12px;
+  border:1px dashed #d0a9bb;
+  border-radius:9px;
+  background:#fff9ef;
+  text-align:center;
+  font-size:clamp(12px,3.8cqw,18px);
 }
-.note{color:var(--muted);font-size:clamp(9px,2.8cqw,12px);text-align:center;line-height:1.5}
-.box{width:45%;aspect-ratio:1.6;display:grid;place-items:center;background:#b78560;border:5px solid #886142;border-radius:7px;font-size:35px;color:#ffdf91}
+.box{
+  width:47%;
+  aspect-ratio:1.5;
+  display:grid;
+  place-items:center;
+  border:5px solid #bd829c;
+  border-radius:7px;
+  background:#e4b1c5;
+  color:#fff6df;
+  font-size:43px;
+  box-shadow:0 8px 0 #c28da32a;
+}
 .wheels{display:flex;gap:10px}
-.wheel{width:clamp(48px,18cqw,80px);aspect-ratio:1;border-radius:50%;border:6px double #b4a06a;background:#fff7df;font-size:clamp(25px,9cqw,40px);color:#345447}
-.slots,.pieces{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%}
-.slot,.piece{padding:0;border-radius:7px;overflow:hidden;aspect-ratio:.85}
-.slot{border:2px dashed #a1b393;background:#dce5d4;color:#7d9276;font-size:28px}
-.piece{border:3px solid transparent;background:#fff9e9}
-.piece.selected{border-color:#dc8b8d}
-.piece.used{opacity:.3}
-.slot svg,.piece svg{width:100%;height:100%;display:block}
-.scratch-wrap{width:100%;height:210px;position:relative;border-radius:10px;overflow:hidden;background:#f9efd9}
-.memory-picture{position:absolute;inset:0}
-.memory-picture img{width:100%;height:100%;object-fit:cover}
-.cover{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
-.bar{width:85%;height:6px;background:#d1dcca;border-radius:10px;overflow:hidden}
-.bar i{display:block;height:100%;width:0;background:#7c9a6c}
-.pads{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:85%}
-.pad{aspect-ratio:1.4;border:3px solid #bcccae;border-radius:14px;background:#faf3de;color:#36584a;font-size:34px;box-shadow:0 5px 0 #bfceb3}
-.pad.flash{background:#edd38c;transform:translateY(4px);box-shadow:0 1px 0 #bfceb3}
-.pairs{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
-.pair-column{display:grid;gap:10px}
-.pair{min-height:62px;border:2px solid #c7d1ba;border-radius:9px;background:#fff9e9;color:var(--green);padding:7px;font-size:clamp(11px,3.5cqw,16px)}
-.pair.selected{border-color:#d59179;background:#f9e8cc}
-.pair.matched{border-color:#7f9b69;background:#dce8cf;opacity:.65}
-.tiles{width:83%;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.tile{aspect-ratio:1;padding:0;border:2px solid #b7c7a8;border-radius:8px;background:#faf3dc}
-.tile svg{display:block;width:100%;height:100%;transition:transform .18s}
-.tile.lit{background:#f5d58d}
-.hold-star{
-  width:56%;aspect-ratio:1;border:0;background:none;color:#dfb44e;
-  font-size:clamp(90px,36cqw,160px);line-height:1;touch-action:none;user-select:none;
-  filter:drop-shadow(0 0 12px #e7c66f60);transform:scale(var(--scale,1));
+.wheel{
+  width:clamp(48px,18cqw,80px);
+  aspect-ratio:1;
+  border:6px double #d0a7bd;
+  border-radius:50%;
+  background:#fff4dc;
+  color:#aa6b87;
+  font-size:clamp(25px,9cqw,40px);
 }
-.hold-star.glow{filter:drop-shadow(0 0 30px #eac56e);color:#f9cd56}
-.wish-input{width:100%;resize:none;border:1px solid #b7c9ac;border-radius:10px;background:#fffdf3;color:var(--ink);padding:12px;font-size:16px;line-height:1.6}
-.wish-preview{max-width:90%;padding:20px;background:#fff5d9;border-radius:8px;white-space:pre-line;text-align:center;font-size:clamp(13px,4cqw,19px)}
-@media(max-height:540px){.testbar{padding:2px}.dialogue{padding-top:2%;gap:4px}.message{padding:4%}.puzzle{gap:8px}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.slots,.pieces{
+  width:100%;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+.slot,.piece{
+  padding:0;
+  aspect-ratio:.85;
+  border-radius:8px;
+  overflow:hidden;
+}
+.slot{
+  border:2px dashed #c59eb4;
+  background:#ecd8e3;
+  color:#b18a9e;
+  font-size:28px;
+}
+.piece{border:3px solid transparent;background:#fff6ec}
+.piece.selected{border-color:#d26d9a}
+.piece.used{opacity:.3}
+.slot svg,.piece svg{display:block;width:100%;height:100%}
+.scratch-wrap{
+  width:100%;
+  height:clamp(150px,53cqw,230px);
+  position:relative;
+  overflow:hidden;
+  border-radius:10px;
+  background:#f6dfeb;
+}
+.scratch-picture{position:absolute;inset:0}
+.scratch-picture img{width:100%;height:100%;object-fit:cover}
+.cover{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  touch-action:none;
+  cursor:crosshair;
+}
+.bar{
+  width:85%;
+  height:7px;
+  overflow:hidden;
+  background:#e2c2d3;
+  border-radius:10px;
+}
+.bar i{
+  display:block;
+  width:0;
+  height:100%;
+  background:#d47da4;
+}
+.pads{
+  width:85%;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.pad{
+  aspect-ratio:1.35;
+  border:3px solid #e4b6cd;
+  border-radius:14px;
+  background:#fff8ed;
+  color:#c16b92;
+  font-size:35px;
+  box-shadow:0 5px 0 #dba6c0;
+}
+.pad.flash{
+  background:#f9d49d;
+  transform:translateY(4px);
+  box-shadow:0 1px 0 #dba6c0;
+}
+.pairs{
+  width:100%;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.pair-column{display:grid;gap:10px}
+.pair-column small{
+  text-align:center;
+  color:#af7d96;
+  font-size:11px;
+}
+.pair{
+  min-height:65px;
+  padding:8px;
+  border:2px solid #e1b8cd;
+  border-radius:10px;
+  background:#fff6ee;
+  color:#98617b;
+  font-size:clamp(11px,3.4cqw,16px);
+  line-height:1.55;
+}
+.pair.selected{border-color:#ce719a;background:#ffe2ee}
+.pair.matched{border-color:#d49ab6;background:#efd4e3;opacity:.65}
+.tiles{
+  width:86%;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+}
+.tile{
+  aspect-ratio:1;
+  padding:0;
+  border:2px solid #deb0c6;
+  border-radius:9px;
+  background:#fff8ed;
+}
+.tile svg{
+  width:100%;
+  height:100%;
+  display:block;
+  transition:transform .18s;
+}
+.tile.lit{background:#f5d999}
+.hold-star{
+  width:60%;
+  aspect-ratio:1;
+  border:0;
+  background:none;
+  color:#e2b85f;
+  font-size:clamp(95px,39cqw,180px);
+  line-height:1;
+  user-select:none;
+  touch-action:none;
+  filter:drop-shadow(0 0 12px #eec78777);
+  transform:scale(var(--scale,1));
+}
+.hold-star.glow{filter:drop-shadow(0 0 30px #efc45f);color:#f2c64d}
+.wish-panel{
+  position:absolute;
+  inset:0;
+  padding:8%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:15px;
+  background:linear-gradient(#fce6ef,#eed8e6);
+}
+.wish-panel .star{font-size:65px;color:#ddae58}
+.wish-input{
+  width:100%;
+  resize:none;
+  padding:12px;
+  border:1px solid #d6a9c0;
+  border-radius:10px;
+  background:#fffaf2;
+  color:var(--ink);
+  font-size:16px;
+  line-height:1.65;
+}
+.wish-paper{
+  max-width:100%;
+  padding:23px;
+  border-radius:8px;
+  background:#fff4da;
+  box-shadow:0 7px 20px #b8799820;
+  white-space:pre-line;
+  overflow-wrap:anywhere;
+  text-align:center;
+  font-size:clamp(13px,4cqw,19px);
+}
+@media(max-height:540px){
+  .puzzle{gap:5px;padding:3%}
+  .puzzle-body{gap:7px}
+  .dialogue{padding:2% 4%}
+  .testbar{padding:2px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
 </style>
 </head>
+
 <body>
 <div class="viewport">
 <main class="game" aria-label="별이 기억하는 겨울">
-  <div class="screen">
+
+  <div class="screen" id="screen">
     <header class="topbar">
       <span class="brand">SEOUL GALLERY</span>
-      <div class="topbar-right">
+      <div class="top-right">
         <span class="counter" id="counter"></span>
-        <button class="home" id="home" aria-label="처음으로">⌂</button>
+        <button class="home" id="home" aria-label="처음 화면으로">⌂</button>
       </div>
     </header>
 
@@ -191,13 +686,13 @@ button:focus-visible,canvas:focus-visible{outline:3px solid #d58c40;outline-offs
 
     <section class="stage" id="stage"></section>
 
-    <section class="dialogue">
+    <section class="dialogue" id="dialogue">
       <div class="portrait">
-        <div class="portrait-art" id="portrait"></div>
+        <div class="portrait-image" id="portrait"></div>
         <div class="portrait-name" id="speaker"></div>
       </div>
       <div class="message">
-        <div class="message-text" id="text" aria-live="off"></div>
+        <div class="message-text" id="messageText"></div>
         <div class="message-actions">
           <span class="message-count" id="messageCount"></span>
           <button class="primary" id="next" hidden>다음</button>
@@ -209,7 +704,7 @@ button:focus-visible,canvas:focus-visible{outline:3px solid #d58c40;outline-offs
   <div class="testbar" id="testbar">
     <span>TEST MODE</span>
     <button id="pass">문제 패스</button>
-    <button id="resetPuzzle">문제 다시</button>
+    <button id="retry">문제 다시</button>
   </div>
 
   <section class="overlay" id="overlay">
@@ -221,6 +716,7 @@ button:focus-visible,canvas:focus-visible{outline:3px solid #d58c40;outline-offs
       <button class="primary" id="overlayButton"></button>
     </div>
   </section>
+
 </main>
 </div>
 
@@ -228,219 +724,327 @@ button:focus-visible,canvas:focus-visible{outline:3px solid #d58c40;outline-offs
 (() => {
 "use strict";
 
-/*
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  설정
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  이미지는 직접 호스팅한 URL 또는 서비스 내 경로로 교체하세요.
-  characters에는 배경 투명 PNG 사용을 권장합니다.
-  빈 주소는 임시 그림으로 표시합니다.
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   설정
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+const CONFIG={
+  testMode:true,
+  typingInterval:35,
 
-  실제 공간의 길 안내는 확인된 동선으로 교체하세요.
-  현재 문제 단서는 화면 안에 모두 있어 현장 없이 테스트할 수 있습니다.
-*/
-const CONFIG = {
-  testMode: true,
-  typingInterval: 35,
-
-  images: {
-    intro: "",
-    welcome: "",
-    boxGuide: "",
-    boxScene: "",
-    starAwake: "",
-    seoulGuide: "",
-    seoulScene: "",
-    bookGuide: "",
-    bookScene: "",
-    memoryBedroom: "",
-    stageGuide: "",
-    stageScene: "",
-    wishGuide: "",
-    wishScene: "",
-    christmasGuide: "",
-    christmasScene: "",
-    ending: "",
-    epilogue: "",
-    outro: ""
+  images:{
+    intro:"image_01.png",
+    box:"image_01.png",
+    awake:"image_02.png",
+    seoul:"image_03.png",
+    book:"image_04.png",
+    stage:"image_05.png",
+    wish:"image_06.png",
+    ending:"image_07.png",
+    outro:"image_07.png"
   },
 
-  characters: {
-    "해치": "",
-    "백호": "",
-    "청룡": "",
-    "주작": "",
-    "현무": "",
-    "별": "",
-    "안내": ""
+  /*
+    캐릭터 단독 이미지를 준비하면 아래 주소를 넣으세요.
+    예: "해치":"haechi.png"
+    비어 있으면 이름이 들어간 임시 프로필을 표시합니다.
+  */
+  portraits:{
+    "해치":"",
+    "백호":"",
+    "청룡":"",
+    "주작":"",
+    "현무":"",
+    "별":"",
+    "아이의 기억":"",
+    "안내":""
   },
 
-  routes: {
-    box: {
+  /*
+    7장의 키비주얼은 길 안내 지도가 아니므로
+    별도 길 안내 이미지는 선택 사항으로 분리했습니다.
+    image가 비어 있으면 목적지와 안내 문구를 표시합니다.
+    실제 동선은 현장 확인 후 detail에 입력하세요.
+  */
+  routes:{
+    box:{
       name:"장식 상자를 둔 곳",
-      image:"boxGuide",
-      detail:"현장의 안내 표식을 따라 장식 상자가 있는 곳으로 이동해 주세요."
+      image:"",
+      detail:"현장 안내 표식을 따라\n장식 상자가 놓인 곳으로 이동해 주세요."
     },
-    seoul: {
+    seoul:{
       name:"내친구서울 1관",
-      image:"seoulGuide",
-      detail:"서울도시모형이 보이는 곳으로 이동해 주세요."
+      image:"",
+      detail:"서울도시모형이 보이는 곳으로\n이동해 주세요."
     },
-    book: {
+    book:{
       name:"서울책방",
-      image:"bookGuide",
-      detail:"서울책방 입구의 미션 표식을 찾아 주세요."
+      image:"",
+      detail:"서울책방 입구의\n미션 표식을 찾아 주세요."
     },
-    stage: {
+    stage:{
       name:"공연장",
-      image:"stageGuide",
+      image:"",
       detail:"공연장 주변의 미션 표식을 찾아 주세요.\n무대에 올라가지 않아도 참여할 수 있어요."
     },
-    wish: {
+    wish:{
       name:"소망나무",
-      image:"wishGuide",
-      detail:"소망 메모가 걸려 있는 나무를 찾아 주세요."
+      image:"",
+      detail:"소망 메모가 걸려 있는\n나무를 찾아 주세요."
     },
-    christmas: {
-      name:"대형 트리 옆 크리스마스 공간",
-      image:"christmasGuide",
-      detail:"처음 만났던 대형 트리 옆 크리스마스 공간으로 돌아와 주세요."
+    christmas:{
+      name:"대형 트리 옆\n크리스마스 공간",
+      image:"",
+      detail:"처음 만났던 대형 트리 옆\n크리스마스 공간으로 돌아와 주세요."
     }
   }
 };
 
-const line = (who,text) => ({who,text});
+const L=(who,text)=>({who,text});
 
-const CHAPTERS = [
+const CHAPTERS=[
   {
-    title:"장식 상자를 찾아서", image:"welcome", route:"box", puzzle:"box",
-    story:[
-      line("해치","안녕! 나랑 크리스마스 준비를 도와줄래?"),
-      line("해치","친구들은 트리를 세우고 있어.\n나는 장식 상자를 가져가기로 했어."),
-      line("해치","상자를 둔 곳부터 같이 가 보자!")
+    title:"장식 상자를 찾아서",
+    image:"box",
+    route:"box",
+    puzzle:"box",
+
+    before:[
+      L("해치","안녕! 서울갤러리에 놀러 왔구나.\n나랑 크리스마스 준비 좀 도와줄래?"),
+      L("해치","친구들은 트리를 세우고,\n나는 장식 상자를 가져가기로 했어."),
+      L("해치","그런데 상자를 여러 개 꺼내 놓아서\n어느 게 장식 상자인지 헷갈리네……."),
+      L("해치","같이 찾아주면 정말 든든하겠다.\n상자에 표시가 붙어 있다고 했어!")
     ],
+
     guide:[
-      line("해치","창고에서 꺼낸 상자를 여기 뒀대.\n표식을 보고 우리 상자를 찾아보자.")
+      L("해치","창고에서 꺼낸 상자를\n이쪽에 모아 뒀대."),
+      L("해치","안내를 따라가서 표식을 찾아보자.\n상자 앞에 도착하면 알려줘!")
     ],
-    task:line("해치","상자가 잠겨 있네?\n표식 순서대로 원판을 돌려 줄래?"),
-    solved:line("해치","철컥! 상자가 열렸어.\n친구들이 기다리는 트리로 가져가자!")
+
+    after:[
+      L("해치","열렸다! 장식이 가득 들어 있어.\n우리 상자를 제대로 찾았네!"),
+      L("해치","친구들이 기다리겠다.\n이제 트리로 가져가자.")
+    ]
   },
+
   {
-    title:"별이 바라보던 서울", image:"starAwake", route:"seoul", puzzle:"landscape",
-    story:[
-      line("백호","트리는 준비됐어!\n이제 상자 속 장식을 달아 보자!"),
-      line("해치","이 별은 끈이 해졌네.\n새 끈을 달아서 걸어 줄게."),
-      line("별","음…… 이렇게 환한 건 오랜만이네."),
-      line("해치","우리가 깨웠구나!\n여기는 서울갤러리야."),
-      line("별","나는 작은 창문 옆에 있었는데……\n이야기를 들려주던 친구도 있었어."),
-      line("해치","그 친구가 궁금하구나.\n기억나는 풍경부터 같이 찾아볼까?"),
-      line("별","밤이면 창밖으로\n길게 반짝이는 강이 보였어.")
+    title:"별이 바라보던 서울",
+    image:"awake",
+    route:"seoul",
+    puzzle:"landscape",
+
+    before:[
+      L("지문","(상자를 트리로 가져오자,\n백호가 반갑게 손을 흔듭니다.)"),
+      L("백호","왔구나! 트리는 튼튼하게 세웠어.\n이제 내가 상자를 들어줄게!"),
+      L("해치","고마워! ……어?\n장식들 밑에 작은 별도 있었네."),
+      L("해치","조금 낡았지만 예쁘다.\n해진 끈을 새로 달아 걸어줄게."),
+      L("지문","(별을 가지에 걸자,\n작은 빛이 깜빡입니다.)"),
+      L("별","음…… 여긴 어디야?\n내가 보던 창문은 어디 갔지?"),
+      L("해치","놀랐지? 여기는 서울갤러리야.\n너는 장식 상자 안에서 자고 있었어."),
+      L("별","나는 작은 창문 옆에 있었는데…….\n잠들기 전에 말을 걸어주던 친구도 있었어."),
+      L("해치","그 친구와 함께 지냈구나.\n지금은 어디 있는지 궁금해?"),
+      L("별","응. 다시 이야기를 듣고 싶어.\n그런데 어디로 가야 할지 모르겠어."),
+      L("해치","기억나는 풍경부터 찾아보자.\n창밖에는 무엇이 보였어?"),
+      L("별","밤이면 길게 반짝이는 강이 보였어.\n강 옆에는 불빛도 아주 많았고."),
+      L("백호","그거라면 찾아볼 만한 곳이 있어!\n서울도시모형을 보러 가자!")
     ],
+
     guide:[
-      line("백호","내친구서울 1관으로 가자!\n서울도시모형에서 찾아보는 거야."),
-      line("해치","강과 건물들이 작게 보이는 곳을 찾으면 돼.")
+      L("해치","내친구서울 1관에는\n서울을 작게 만들어 놓은 모형이 있어."),
+      L("백호","강도 건물도 한눈에 볼 수 있지!\n별이 보던 풍경을 같이 찾아보자.")
     ],
-    task:line("해치","별의 기억이 조각조각 흩어졌어.\n강이 끊기지 않도록 풍경을 이어 줘."),
-    solved:line("별","맞아! 작은 창문 안에서\n이렇게 반짝이는 한강을 바라봤어.")
+
+    after:[
+      L("별","맞아, 한강이야!\n작은 창문 안에서 이렇게 바라봤어."),
+      L("해치","하나씩 기억나고 있네.\n창문 가까이에는 무엇이 있었어?"),
+      L("별","작은 지붕과 골목이 보였어.\n그림으로 보면 알아볼 수 있을 것 같아.")
+    ]
   },
+
   {
-    title:"작은 방의 기억", image:"seoulScene", route:"book", puzzle:"scratch",
-    story:[
-      line("해치","강은 찾았네!\n그 창문이 있던 동네는 어떤 모습이었을까?"),
-      line("별","가까이에 작은 지붕들이 보였어.\n조금만 더 보면 기억날 것 같아.")
+    title:"작은 방의 기억",
+    image:"book",
+    route:"book",
+    puzzle:"scratch",
+
+    before:[
+      L("해치","그럼 서울의 동네 모습도 찾아보자.\n서울책방에서 자료를 살펴볼 수 있을 거야."),
+      L("별","응. 내가 지내던 창문이 있는지\n조금 더 보고 싶어.")
     ],
+
     guide:[
-      line("해치","서울책방에서 동네 풍경도 찾아보자."),
-      line("주작","서울 풍경을 찾는다고?\n그럼 내가 찾아 둔 그림도 살펴봐.")
+      L("지문","(서울책방에서 자료를 살펴보던\n주작을 만났습니다.)"),
+      L("주작","동네 풍경을 찾는다고?\n그럼 이 그림도 봐.\n다른 자료까지 잔뜩 찾아뒀지."),
+      L("해치","고마워, 주작!\n별아, 아는 모습이 있어?"),
+      L("별","저 지붕…… 익숙해.\n그 옆 창문도 보고 싶어.")
     ],
-    task:line("주작","그림이 가려져 있네.\n살살 문질러서 창문 안을 확인해 봐."),
-    solved:line("별","기억났어! 크리스마스가 끝나도\n그 친구는 나를 침대맡에 두었어.")
+
+    after:[
+      L("별","저기야! 내 자리는 침대맡이었어.\n크리스마스가 끝나도\n그 친구는 나를 곁에 두었어."),
+      L("해치","다른 장식들을 정리한 뒤에도\n별은 함께 있었구나."),
+      L("별","응. 잠들기 전에 나를 바라보면서\n하루 이야기를 들려줬어."),
+      L("주작","그런데 그림 속 서울은 오래전 모습이야.\n네가 꽤 오래 잠들었던 모양인데."),
+      L("별","그렇게 오래됐구나…….\n목소리도 조금씩 흐릿해졌어.")
+    ]
   },
+
   {
-    title:"잠들기 전의 이야기", image:"bookScene", route:"stage", puzzle:"sound",
-    story:[
-      line("해치","그 친구가 별을 많이 좋아했나 봐."),
-      line("별","응. 잠들기 전에 꼭 말을 걸어 줬어.\n그 목소리가 다시 듣고 싶어."),
-      line("주작","이건 오래전 풍경이야.\n네 친구도 지금은 많이 자랐겠네.")
+    title:"잠들기 전의 이야기",
+    image:"stage",
+    route:"stage",
+    puzzle:"sound",
+
+    before:[
+      L("해치","급하게 떠올리지 않아도 괜찮아.\n공연장 쪽에서 잠깐 쉬어 가자."),
+      L("별","고마워.\n아주 작은 노래가 생각날 것 같아.")
     ],
+
     guide:[
-      line("해치","공연장 쪽에서 잠깐 쉬어 가자.\n천천히 기억해 봐도 돼."),
-      line("청룡","작은 노래가 생각난다고?\n나도 같이 따라 할래!")
+      L("지문","(공연장 근처에서\n청룡이 작은 가락을 흥얼거립니다.)"),
+      L("청룡","나 이 소리 좋아해!\n너희도 같이 할래?"),
+      L("별","가락을 들으니까 생각났어.\n그 친구도 이야기하기 전에\n작은 노래를 불렀는데."),
+      L("해치","그 노래를 다시 들어보면\n목소리도 떠오를지 몰라."),
+      L("청룡","좋아! 나도 같이 따라 해볼래!")
     ],
-    task:line("해치","별이 기억하는 가락을 들어 보고,\n같은 순서로 소리판을 눌러 줘."),
-    solved:line("별","맞아, 이 가락이야!\n그 뒤에는 오늘 있었던 일을 들려줬어.")
+
+    after:[
+      L("별","맞아, 이 가락이야.\n그 뒤에는 이런 이야기를 들려줬어……."),
+      L("지문","(별의 기억 속에서\n아이의 목소리가 들려옵니다.)"),
+      L("아이의 기억","내일은 친구랑 화해하고 싶어.\n엄마 감기도 빨리 나았으면 좋겠어."),
+      L("별","나는 소원을 이루어줄 수는 없었어.\n그냥 곁에서 이야기를 들었지."),
+      L("해치","그런데도 다음 날이면\n별에게 또 이야기하러 왔구나."),
+      L("별","응. 그 시간이 참 좋았어.\n지금은 어떤 이야기를 하고 있을까?")
+    ]
   },
+
   {
-    title:"다시 만난 익숙한 마음", image:"stageScene", route:"wish", puzzle:"pairs",
-    story:[
-      line("별","“친구랑 화해하고 싶어.”\n“엄마 감기가 빨리 나았으면 좋겠어.”"),
-      line("별","나는 듣고만 있었는데,\n다음 날이면 또 찾아와 줬지."),
-      line("해치","지금은 어떤 소원을 빌고 있을까?\n사람들의 소망이 모인 곳에 가 보자.")
+    title:"다시 만난 익숙한 마음",
+    image:"wish",
+    route:"wish",
+    puzzle:"pairs",
+
+    before:[
+      L("해치","그 친구의 소식은 아직 모르지만,\n지금 사람들의 소망은 만나볼 수 있어."),
+      L("별","지금 사람들은 어떤 소원을 빌어?"),
+      L("해치","소망나무에 가보자.\n사람들이 남긴 마음이 모여 있는 곳이야.")
     ],
+
     guide:[
-      line("현무","소망을 읽으러 왔구나.\n천천히 살펴봐. 나도 여기 있을게.")
+      L("지문","(소망 메모를 바라보던 현무가\n옆자리를 내어줍니다.)"),
+      L("현무","소망 읽으러 왔어?\n여기서 같이 봐."),
+      L("별","종이가 정말 많네…….\n어? 이 이야기는 나도 들어봤어."),
+      L("해치","별이 기억하는 소원과\n비슷한 마음이 있는지 찾아보자.")
     ],
-    task:line("해치","별이 들었던 이야기와\n비슷한 마음을 찾아 이어 줄래?"),
-    solved:line("별","가족이 건강하길 바라는 마음……\n지금 사람들도 그 친구와 닮았어.")
+
+    after:[
+      L("별","가족이 건강하길 바라는 마음도,\n누군가와 사이좋게 지내고 싶은 마음도……\n내가 듣던 이야기와 닮았어."),
+      L("별","그 친구도 많이 자랐다면\n이런 소원을 빌고 있을까?"),
+      L("현무","그럴지도.\n어른이 되어도 바라는 건 있으니까."),
+      L("지문","(별이 메모를 읽을 때마다\n낡은 표면 사이로 작은 빛이 새어 나옵니다.)"),
+      L("해치","별아, 네가 반짝이고 있어!\n기분 좋은 일이 생겼어?")
+    ]
   },
+
   {
-    title:"별에게 생긴 소원", image:"wishScene", route:"christmas", puzzle:"circuit",
-    story:[
-      line("별","그 친구도 어디선가\n이런 이야기를 하고 있을까?"),
-      line("현무","많이 자라도 바라는 마음은 남아 있으니까."),
-      line("해치","별아, 네가 조금씩 반짝이고 있어!"),
-      line("별","이 이야기들을 더 듣고 싶어.\n모두 잘되길 바란다고 전하고 싶어.")
+    title:"별에게 생긴 소원",
+    image:"wish",
+    route:"christmas",
+    puzzle:"circuit",
+
+    before:[
+      L("별","이 이야기를 들을 수 있어서 좋아.\n그 친구가 들려주던 시간도 생각나고."),
+      L("별","이번에는 내가 소원을 빌고 싶어.\n이 사람들이 내년에도\n자기 이야기를 들려주러 왔으면 좋겠어."),
+      L("해치","그 마음이 빛이 되었나 봐.\n트리로 돌아가 친구들에게도 보여주자.")
     ],
+
     guide:[
-      line("해치","트리로 돌아가자.\n친구들과 함께 별빛이 나아갈 길을 찾아보자.")
+      L("해치","처음 별을 걸어줬던 트리 옆으로 가자.\n그곳에서 별빛을 함께 살펴보는 거야."),
+      L("지문","(친구들이 모이자 별빛이 길게 뻗습니다.\n하지만 빛의 길은 중간중간 끊겨 있습니다.)"),
+      L("주작","이 빛, 더 멀리 갈 수 있겠는데?\n끊긴 길부터 이어보자.")
     ],
-    task:line("주작","빛이 지나갈 길이 끊겨 있어.\n조각을 돌려 끝까지 이어 보자."),
-    solved:line("백호","좋아, 빛이 끝까지 이어졌어!\n이제 별도 더 멀리 빛날 수 있겠지?")
+
+    after:[
+      L("백호","이어졌다! 별빛이 끝까지 닿았어!\n별아, 이제 어디로 가고 싶어?"),
+      L("별","처음에는 예전 자리로 돌아가고 싶었어.\n그 친구의 이야기를 다시 듣고 싶었거든."),
+      L("별","그런데 여기에 듣고 싶은 이야기가\n이렇게 많이 있을 줄은 몰랐어.")
+    ]
   },
+
   {
-    title:"별이 빛나는 자리", image:"christmasScene", route:"christmas", puzzle:"hold",
-    story:[
-      line("해치","별아, 이제 어디로 가고 싶어?"),
-      line("별","그 친구와 여기 있는 사람들 모두에게\n내 빛이 닿았으면 좋겠어."),
-      line("해치","우리도 도와줄게.\n마지막으로 별에게 힘을 모아 주자.")
+    title:"별이 빛나는 자리",
+    image:"ending",
+    route:"christmas",
+    puzzle:"hold",
+
+    before:[
+      L("별","하늘에서 빛난다면,\n멀리 있는 그 친구와 여기 있는 사람들을\n함께 응원할 수 있을까?"),
+      L("해치","가보고 싶은 곳이 생겼구나.\n우리가 마지막까지 도와줄게."),
+      L("별","조금 떨리지만…… 한번 가보고 싶어.\n마지막으로 힘을 보태줄래?")
     ],
+
     guide:[
-      line("백호","이번에는 이동하지 않아도 돼!\n이 자리에서 별을 함께 응원하자.")
+      L("해치","이번에는 이동하지 않아도 돼.\n지금 이 자리에서 별을 응원해 주자."),
+      L("백호","준비됐어!\n우리 힘을 함께 모아보는 거야!")
     ],
-    task:line("해치","별을 꾹 눌러 빛을 모아 줘.\n빛이 가득 차면 별이 날아오를 거야."),
-    solved:line("별","고마워.\n이제 너희의 이야기도 잘 듣고 있을게.")
+
+    after:[
+      L("별","따뜻해…… 고마워.\n들려준 이야기들을 꼭 기억하고 있을게.")
+    ]
   }
 ];
 
-const $ = s => document.querySelector(s);
-const ui = {
-  stage:$("#stage"), label:$("#chapterLabel"), title:$("#chapterTitle"),
-  portrait:$("#portrait"), speaker:$("#speaker"), text:$("#text"),
-  count:$("#messageCount"), next:$("#next"), counter:$("#counter"),
-  overlay:$("#overlay"), pass:$("#pass"), reset:$("#resetPuzzle")
+const EPILOGUE=[
+  L("지문","(장식의 모양을 감싸던 빛이 천천히 올라갑니다.\n서울의 밤하늘에 작은 별 하나가 반짝입니다.)"),
+  L("청룡","저기 있다!\n별아, 우리 보여?"),
+  L("해치","반짝이는 걸 보니 들었나 봐.\n우리 이야기도 기다리고 있겠지?"),
+  L("현무","너는 어떤 소망이 있어?\n작은 이야기여도 좋아.")
+];
+
+const $=s=>document.querySelector(s);
+const ui={
+  screen:$("#screen"),
+  dialogue:$("#dialogue"),
+  stage:$("#stage"),
+  label:$("#chapterLabel"),
+  title:$("#chapterTitle"),
+  portrait:$("#portrait"),
+  speaker:$("#speaker"),
+  text:$("#messageText"),
+  count:$("#messageCount"),
+  next:$("#next"),
+  counter:$("#counter"),
+  overlay:$("#overlay"),
+  pass:$("#pass"),
+  retry:$("#retry")
 };
 
-let chapter=0, phase="story", dialogueIndex=0;
-let typingTimer=0, typing=false, solved=false;
-let cleanups=[], puzzleCheck=null, visitToken=0;
+let chapter=0;
+let phase="before";
+let lineIndex=0;
+let typing=false;
+let typingTimer=0;
+let token=0;
+let cleanups=[];
+let solved=false;
+let puzzleCheck=null;
 let audioContext=null;
-const collected=new Set();
+let epilogueIndex=0;
+let wishStep=0;
 
-const phaseNames={story:"이야기",guide:"장소 안내",puzzle:"문제",epilogue:"에필로그"};
-
-function escapeHTML(v){
-  return String(v).replaceAll("&","&amp;").replaceAll("<","&lt;")
-    .replaceAll(">","&gt;").replaceAll('"',"&quot;");
+function esc(v){
+  return String(v).replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;");
 }
 
-function registerTimeout(fn,ms){
+function later(fn,ms){
   const id=setTimeout(fn,ms);
   cleanups.push(()=>clearTimeout(id));
   return id;
 }
 
 function cleanup(){
-  visitToken++;
+  token++;
   clearInterval(typingTimer);
   typing=false;
   cleanups.forEach(fn=>fn());
@@ -448,15 +1052,18 @@ function cleanup(){
   puzzleCheck=null;
 }
 
-function visual(key,title,symbol="✦",contain=false){
-  const source=CONFIG.images[key];
-  return `<div class="visual ${contain?"contain":""}">
+function imageHTML(source,title,symbol="✦"){
+  return `<div class="art">
     <div class="fallback">
-      <div class="symbol">${symbol}</div>
-      <p>${escapeHTML(title)}</p>
+      <strong>${symbol}</strong>
+      <span>${esc(title)}</span>
     </div>
-    ${source?`<img src="${escapeHTML(source)}" alt="${escapeHTML(title)}">`:""}
+    ${source?`<img src="${esc(source)}" alt="${esc(title)}">`:""}
   </div>`;
+}
+
+function sceneImage(key,title,symbol="✦"){
+  return imageHTML(CONFIG.images[key],title,symbol);
 }
 
 function watchImages(root){
@@ -465,62 +1072,72 @@ function watchImages(root){
   });
 }
 
-/* キャラクター画像未設定時の仮表示。正式画像はCONFIG.charactersに設定。 */
-function portraitMarkup(name){
-  const source=CONFIG.characters[name];
-  if(source)return `<img src="${escapeHTML(source)}" alt="${escapeHTML(name)}">`;
+function portraitHTML(name){
+  const source=CONFIG.portraits[name];
+  if(source)return `<img src="${esc(source)}" alt="${esc(name)}">`;
 
-  const colors={
-    "해치":"#ec96b7","백호":"#f5f1ff","청룡":"#7ac9e6",
-    "주작":"#e96a51","현무":"#88b99d","별":"#efc35e","안내":"#c1d2aa"
-  };
-  if(name==="별"){
+  if(name==="지문"){
     return `<svg viewBox="0 0 100 100" aria-hidden="true">
-      <path d="M50 8L63 35L93 39L71 61L76 92L50 77L23 92L29 61L7 39L37 35Z"
-      fill="#efc35e" stroke="#cda34d" stroke-width="2"/>
-      <circle cx="40" cy="53" r="3" fill="#76552d"/>
-      <circle cx="60" cy="53" r="3" fill="#76552d"/>
-      <path d="M44 64Q50 70 56 64" fill="none" stroke="#76552d" stroke-width="2"/>
+      <path d="M50 17L59 41L83 50L59 59L50 83L41 59L17 50L41 41Z"
+      fill="#d2b3c4"/>
     </svg>`;
   }
+
+  if(name==="별"){
+    return `<svg viewBox="0 0 100 100" aria-hidden="true">
+      <path d="M50 9L63 35L92 39L71 60L76 91L50 77L24 91L29 60L8 39L37 35Z"
+      fill="#edc163" stroke="#cda454" stroke-width="2"/>
+      <circle cx="40" cy="53" r="3" fill="#865f38"/>
+      <circle cx="60" cy="53" r="3" fill="#865f38"/>
+      <path d="M44 64Q50 70 56 64" fill="none" stroke="#865f38" stroke-width="2"/>
+    </svg>`;
+  }
+
+  const colors={
+    "해치":"#ee9bbd",
+    "백호":"#eee5ff",
+    "청룡":"#a6dcef",
+    "주작":"#ed9e94",
+    "현무":"#b1d8bd",
+    "아이의 기억":"#f4dfac",
+    "안내":"#e6cadb"
+  };
+
   return `<svg viewBox="0 0 100 100" aria-hidden="true">
-    <circle cx="50" cy="50" r="39" fill="${colors[name]||"#ccd9bd"}"/>
-    <text x="50" y="58" text-anchor="middle" font-size="24" fill="#345247"
-      font-family="sans-serif">${escapeHTML(name)}</text>
+    <circle cx="50" cy="50" r="39" fill="${colors[name]||"#e6cadb"}"/>
+    <text x="50" y="57" text-anchor="middle" font-size="${name.length>3?14:23}"
+      fill="#8c5b76" font-family="sans-serif">${esc(name)}</text>
   </svg>`;
 }
 
-function setSpeaker(name){
-  ui.speaker.textContent=name;
-  ui.portrait.innerHTML=portraitMarkup(name);
-  watchImages(ui.portrait);
-}
-
-function say(who,text,buttonLabel="",onFinished=null){
+function say(who,text,buttonLabel){
   clearInterval(typingTimer);
   typing=true;
   ui.next.hidden=true;
   ui.text.textContent="";
-  setSpeaker(who);
+  ui.text.classList.toggle("narration",who==="지문");
+  ui.speaker.textContent=who==="지문"?"":who;
+  ui.portrait.innerHTML=portraitHTML(who);
+  watchImages(ui.portrait);
 
   const chars=Array.from(text);
+  const currentToken=token;
   let i=0;
-  const token=visitToken;
 
   const finish=()=>{
     clearInterval(typingTimer);
     typing=false;
-    if(buttonLabel){
-      ui.next.textContent=buttonLabel;
-      ui.next.hidden=false;
-    }
-    if(onFinished)onFinished();
+    ui.next.textContent=buttonLabel;
+    ui.next.hidden=false;
   };
 
   if(!chars.length){finish();return}
 
   typingTimer=setInterval(()=>{
-    if(token!==visitToken){clearInterval(typingTimer);return}
+    if(currentToken!==token){
+      clearInterval(typingTimer);
+      return;
+    }
     ui.text.textContent+=chars[i++];
     ui.text.scrollTop=ui.text.scrollHeight;
     if(i>=chars.length)finish();
@@ -529,543 +1146,745 @@ function say(who,text,buttonLabel="",onFinished=null){
 
 function current(){return CHAPTERS[chapter]}
 
+function setLayout(isPuzzle){
+  ui.screen.classList.toggle("puzzle-mode",isPuzzle);
+  ui.dialogue.hidden=isPuzzle;
+  $("#testbar").hidden=!CONFIG.testMode;
+  ui.pass.disabled=!isPuzzle||solved;
+  ui.retry.disabled=!isPuzzle;
+}
+
 function updateHeader(){
+  const labels={
+    before:"이야기",
+    guide:"장소 안내",
+    puzzle:"문제",
+    after:"되찾은 기억",
+    epilogue:"에필로그"
+  };
   ui.label.textContent=phase==="epilogue"?"EPILOGUE":
-    `CHAPTER ${String(chapter+1).padStart(2,"0")} · ${phaseNames[phase]}`;
+    `CHAPTER ${String(chapter+1).padStart(2,"0")} · ${labels[phase]}`;
   ui.title.textContent=phase==="epilogue"?"별에게 들려주는 이야기":current().title;
   ui.counter.textContent=phase==="epilogue"?"완주":`${chapter+1} / 7`;
-  $("#testbar").hidden=!CONFIG.testMode;
-  ui.pass.disabled=phase!=="puzzle"||solved;
-  ui.reset.disabled=phase!=="puzzle";
 }
 
-function dialogueLines(){
-  return phase==="story"?current().story:current().guide;
+function renderLines(){
+  const lines=current()[phase];
+  const item=lines[lineIndex];
+  const last=lineIndex===lines.length-1;
+  let nextLabel="다음";
+
+  if(last){
+    if(phase==="before")nextLabel=chapter===6?"함께 응원하기":"다음 장소 확인";
+    if(phase==="guide")nextLabel=chapter===6?"마지막 문제 시작":"도착했어요";
+    if(phase==="after")nextLabel=chapter===6?"별의 이야기 마무리":"이야기 이어 보기";
+  }
+
+  ui.count.textContent=`${lineIndex+1} / ${lines.length}`;
+  say(item.who,item.text,nextLabel);
 }
 
-function renderDialogue(){
-  const lines=dialogueLines();
-  const item=lines[dialogueIndex];
-  ui.count.textContent=`${dialogueIndex+1} / ${lines.length}`;
+function renderGuide(){
+  const route=CONFIG.routes[current().route];
+  const stay=chapter===6;
 
-  const last=dialogueIndex===lines.length-1;
-  const button=last
-    ? phase==="story"?"이어서 가기":chapter===6?"별 응원하기":"도착했어요"
-    : "다음";
-
-  say(item.who,item.text,button);
+  if(route.image){
+    ui.stage.innerHTML=imageHTML(route.image,route.name,"➜")+
+      `<div class="guide-caption">${esc(stay?"현재 장소":route.name)}<br>
+      ${esc(stay?"이동 없이 이 자리에서 진행해 주세요.":route.detail).replaceAll("\n","<br>")}</div>`;
+  }else{
+    ui.stage.innerHTML=`<div class="guide-panel">
+      <div class="guide-kicker">${stay?"현재 장소":"다음 장소"}</div>
+      <div class="guide-arrow">${stay?"★":"➜"}</div>
+      <h2 class="guide-destination">${esc(route.name).replaceAll("\n","<br>")}</h2>
+      <div class="guide-note">${esc(stay?
+        "이동하지 않고,\n지금 있는 자리에서 진행해 주세요.":route.detail)}</div>
+    </div>`;
+  }
 }
 
 function enter(nextPhase){
   cleanup();
   phase=nextPhase;
-  dialogueIndex=0;
+  lineIndex=0;
   solved=false;
   ui.next.hidden=true;
+
+  setLayout(phase==="puzzle");
   updateHeader();
 
-  if(phase==="story"){
-    ui.stage.innerHTML=visual(current().image,current().title);
-    renderDialogue();
-  }else if(phase==="guide"){
-    const r=CONFIG.routes[current().route];
-    const stay=chapter===6;
-    ui.stage.innerHTML=visual(r.image,r.name,"➜",true)+
-      `<div class="route"><strong>${stay?"현재 장소":"다음 장소"} · ${escapeHTML(r.name)}</strong>
-      <p>${escapeHTML(stay?"이동 없이, 지금 있는 자리에서 진행해 주세요.":r.detail)}</p></div>`;
-    renderDialogue();
-  }else if(phase==="puzzle"){
-    ui.count.textContent="문제를 풀어 주세요";
+  if(phase==="puzzle"){
     PUZZLES[current().puzzle]();
-    const task=current().task;
-    say(task.who,task.text,puzzleCheck?"정답 확인":"");
-  }else{
+  }else if(phase==="guide"){
+    renderGuide();
+    renderLines();
+  }else if(phase==="epilogue"){
     renderEpilogue();
+  }else{
+    ui.stage.innerHTML=sceneImage(current().image,current().title);
+    renderLines();
   }
+
   watchImages(ui.stage);
 }
 
-function fail(text){
-  if(solved)return;
-  say("해치",text,puzzleCheck?"다시 확인":"");
+ui.next.onclick=()=>{
+  if(typing)return;
+  if(phase==="epilogue"){advanceEpilogue();return}
+
+  const lines=current()[phase];
+
+  if(lineIndex<lines.length-1){
+    lineIndex++;
+    renderLines();
+    return;
+  }
+
+  if(phase==="before"){enter("guide");return}
+  if(phase==="guide"){enter("puzzle");return}
+
+  if(phase==="after"){
+    if(chapter===6){enter("epilogue");return}
+    chapter++;
+    enter("before");
+  }
+};
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   문제 공통: 대화창 없이 설명 / 조작 / 결과 표시
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function puzzleFrame(title,instruction,body,checkLabel="정답 확인"){
+  ui.stage.innerHTML=`
+    <div class="puzzle">
+      <div class="puzzle-heading">
+        <strong>${esc(title)}</strong>
+        <p>${esc(instruction)}</p>
+      </div>
+      <div class="puzzle-body">${body}</div>
+      <div class="puzzle-footer">
+        <p class="puzzle-status" id="puzzleStatus" role="status" aria-live="polite"></p>
+        <button class="primary" id="check" ${checkLabel?"":"hidden"}>
+          ${esc(checkLabel)}
+        </button>
+      </div>
+    </div>`;
+
+  $("#check").onclick=()=>{
+    if(solved){enter("after");return}
+    if(puzzleCheck)puzzleCheck();
+  };
+}
+
+function status(text,success=false){
+  const el=$("#puzzleStatus");
+  if(!el)return;
+  el.textContent=text;
+  el.classList.toggle("success",success);
 }
 
 function solve(){
   if(solved||phase!=="puzzle")return;
   solved=true;
-  collected.add(chapter);
   ui.pass.disabled=true;
-  ui.count.textContent="✓ 미션 성공";
-  const item=current().solved;
-  say(item.who,item.text,"이야기 이어 보기");
-}
 
-ui.next.onclick=()=>{
-  if(typing)return;
-  if(phase==="puzzle"){
-    if(!solved){if(puzzleCheck)puzzleCheck();return}
-    if(chapter===6){enter("epilogue");return}
-    chapter++;
-    enter("story");
-    return;
-  }
-  if(phase==="epilogue"){advanceEpilogue();return}
-  const lines=dialogueLines();
-  if(dialogueIndex<lines.length-1){dialogueIndex++;renderDialogue()}
-  else enter(phase==="story"?"guide":"puzzle");
-};
+  const messages=[
+    "상자가 열렸어요!",
+    "서울의 풍경이 이어졌어요!",
+    "가려진 기억을 찾아냈어요!",
+    "기억 속 가락이 돌아왔어요!",
+    "서로 닮은 소망을 찾았어요!",
+    "별빛이 끝까지 이어졌어요!",
+    "별빛이 가득 모였어요!"
+  ];
+
+  status("✓ "+messages[chapter],true);
+  const button=$("#check");
+  button.hidden=false;
+  button.disabled=false;
+  button.textContent="이야기 이어 보기";
+
+  ui.stage.querySelectorAll(
+    ".wheel,.piece,.slot,.pad,.pair,.tile,#listen,#scratchAssist,#holdAssist,#holdStar"
+  ).forEach(b=>b.disabled=true);
+}
 
 ui.pass.onclick=()=>{
   if(phase==="puzzle"&&!solved)solve();
 };
-ui.reset.onclick=()=>{
+ui.retry.onclick=()=>{
   if(phase==="puzzle")enter("puzzle");
 };
 
-function intro(){
-  cleanup();
-  const completed=collected.size;
-  ui.overlay.hidden=false;
-  $("#overlayArt").innerHTML=visual("intro","별이 기억하는 겨울");
-  $("#overlaySmall").textContent="해치와 소울프렌즈의 크리스마스 모험";
-  $("#overlayTitle").innerHTML="별이 기억하는<br>겨울";
-  $("#overlayText").textContent="잠들어 있던 작은 별에게\n어떤 이야기가 기다리고 있을까요?";
-  $("#overlayButton").textContent=completed?"처음부터 다시 시작":"해치 만나러 가기";
-  $("#overlayButton").onclick=()=>{
-    collected.clear();chapter=0;
-    ui.overlay.hidden=true;
-    enter("story");
-  };
-  watchImages($("#overlayArt"));
-}
-$("#home").onclick=()=>{
-  if(confirm("처음 화면으로 돌아갈까요? 진행 중인 문제는 초기화됩니다."))intro();
-};
-
-/* ━━━━━━━━━━━ 問題1：기호 자물쇠 ━━━━━━━━━━━ */
+/* ━━━━━━━━━━━ 1. 상자 자물쇠 ━━━━━━━━━━━ */
 function boxPuzzle(){
-  const symbols=["★","☾","❄","●"], answer=[0,1,2], values=[3,3,3];
-  ui.stage.innerHTML=`<div class="puzzle">
-    <div class="rule">상자의 표식　★ → ☾ → ❄</div>
-    <div class="box" id="boxIcon">✦</div>
-    <div class="wheels">${values.map((v,i)=>`
-      <button class="wheel" data-wheel="${i}" aria-label="${i+1}번째 원판 돌리기">●</button>`
-    ).join("")}</div>
-    <div class="note">원판을 누르면 기호가 바뀝니다.</div>
-  </div>`;
+  const symbols=["★","☾","❄","●"];
+  const answer=[0,1,2];
+  const values=[3,3,3];
+
+  puzzleFrame(
+    "장식 상자의 잠금을 풀어 주세요",
+    "표식과 같은 순서로 원판을 맞추세요.",
+    `<div class="rule">★ → ☾ → ❄</div>
+     <div class="box" id="boxIcon">✦</div>
+     <div class="wheels">${values.map((_,i)=>
+       `<button class="wheel" data-wheel="${i}" aria-label="${i+1}번째 원판 돌리기">●</button>`
+     ).join("")}</div>
+     <div class="puzzle-note">원판을 누르면 다음 기호로 바뀝니다.</div>`
+  );
+
   ui.stage.querySelectorAll("[data-wheel]").forEach(b=>b.onclick=()=>{
     if(solved)return;
     const i=+b.dataset.wheel;
     values[i]=(values[i]+1)%symbols.length;
     b.textContent=symbols[values[i]];
   });
+
   puzzleCheck=()=>{
     if(values.every((v,i)=>v===answer[i])){
-      $("#boxIcon").textContent="★";solve();
-    }else fail("아직 잠겨 있네.\n위의 표식과 원판 순서를 비교해 보자.");
+      $("#boxIcon").textContent="★";
+      solve();
+    }else status("표식의 순서를 다시 살펴보세요.");
   };
 }
 
-/* ━━━━━━━━━━━ 問題2：서울 풍경 배치 ━━━━━━━━━━━ */
+/* ━━━━━━━━━━━ 2. 서울 풍경 조각 ━━━━━━━━━━━ */
 function landscapeSVG(piece){
   const rivers=[
     "M-10 130C25 130 45 90 110 90",
     "M-10 90C35 90 60 140 110 140",
     "M-10 140C40 140 65 105 110 105"
   ];
+
   const buildings=[
-    '<rect x="12" y="49" width="18" height="45" fill="#83a396"/><rect x="35" y="32" width="20" height="60" fill="#557b73"/>',
-    '<path d="M50 12V70" stroke="#687b79" stroke-width="3"/><path d="M42 32H58L54 43H46Z" fill="#b79472"/><path d="M15 79Q50 50 85 81" fill="#8ead8f"/>',
-    '<rect x="12" y="50" width="18" height="48" fill="#90aaa0"/><rect x="39" y="38" width="24" height="57" fill="#b9b38c"/>'
+    '<rect x="12" y="49" width="18" height="45" fill="#aa94b2"/><rect x="35" y="32" width="20" height="60" fill="#9c7f9c"/>',
+    '<path d="M50 12V70" stroke="#9b8290" stroke-width="3"/><path d="M42 32H58L54 43H46Z" fill="#c99e9b"/><path d="M15 79Q50 50 85 81" fill="#c5adb8"/>',
+    '<rect x="12" y="50" width="18" height="48" fill="#bb9fba"/><rect x="39" y="38" width="24" height="57" fill="#d6b5b4"/>'
   ];
+
   return `<svg viewBox="0 0 100 180" preserveAspectRatio="none" aria-hidden="true">
-    <rect width="100" height="180" fill="#f5e6bb"/>
-    <circle cx="78" cy="22" r="11" fill="#fff6dc"/>
+    <rect width="100" height="180" fill="#f9e2d9"/>
+    <circle cx="78" cy="22" r="11" fill="#fff7de"/>
     ${buildings[piece]}
-    <path d="${rivers[piece]}" stroke="#91c8d4" stroke-width="28" fill="none"/>
-    <path d="${rivers[piece]}" stroke="#e7f5ed" stroke-width="2" fill="none" stroke-dasharray="3 7"/>
+    <path d="${rivers[piece]}" stroke="#b7cde3" stroke-width="28" fill="none"/>
+    <path d="${rivers[piece]}" stroke="#f3f5ff" stroke-width="2" fill="none" stroke-dasharray="3 7"/>
   </svg>`;
 }
 
 function landscapePuzzle(){
-  let selected=null,slots=[null,null,null];
-  ui.stage.innerHTML=`<div class="puzzle">
-    <div class="rule">강이 끊기지 않게 이어 주세요</div>
-    <div class="slots">${[0,1,2].map(i=>`<button class="slot" data-slot="${i}" aria-label="${i+1}번째 자리">＋</button>`).join("")}</div>
-    <div class="pieces">${[2,0,1].map(i=>`<button class="piece" data-piece="${i}" aria-label="${i+1}번 조각 선택">${landscapeSVG(i)}</button>`).join("")}</div>
-    <div class="note">아래 조각을 선택한 뒤 위쪽 자리를 눌러 주세요.<br>놓인 조각을 누르면 다시 집을 수 있어요.</div>
-  </div>`;
-  const paint=()=>{
+  let selected=null;
+  let slots=[null,null,null];
+
+  puzzleFrame(
+    "별이 바라보던 풍경을 이어 주세요",
+    "강이 끊기지 않게 조각을 놓으세요.",
+    `<div class="slots">${[0,1,2].map(i)=>
+      `<button class="slot" data-slot="${i}" aria-label="${i+1}번째 자리">＋</button>`
+    ).join("")}</div>
+    <div class="pieces">${[2,0,1].map(i)=>
+      `<button class="piece" data-piece="${i}" aria-label="${i+1}번 조각 선택">${landscapeSVG(i)}</button>`
+    ).join("")}</div>
+    <div class="puzzle-note">아래 조각 선택 → 위쪽 자리 선택<br>놓인 조각을 누르면 다시 집을 수 있어요.</div>`
+  );
+
+  function paint(){
     ui.stage.querySelectorAll("[data-slot]").forEach(b=>{
-      const v=slots[+b.dataset.slot];b.innerHTML=v===null?"＋":landscapeSVG(v);
+      const v=slots[+b.dataset.slot];
+      b.innerHTML=v===null?"＋":landscapeSVG(v);
     });
     ui.stage.querySelectorAll("[data-piece]").forEach(b=>{
       const v=+b.dataset.piece;
       b.classList.toggle("selected",selected===v);
       b.classList.toggle("used",slots.includes(v));
     });
-  };
+  }
+
   ui.stage.querySelectorAll("[data-piece]").forEach(b=>b.onclick=()=>{
-    if(!solved){selected=+b.dataset.piece;paint()}
+    if(solved)return;
+    selected=+b.dataset.piece;
+    paint();
   });
+
   ui.stage.querySelectorAll("[data-slot]").forEach(b=>b.onclick=()=>{
     if(solved)return;
     const i=+b.dataset.slot;
-    if(selected===null){selected=slots[i];slots[i]=null}
-    else{slots=slots.map(v=>v===selected?null:v);slots[i]=selected;selected=null}
+    if(selected===null){
+      selected=slots[i];
+      slots[i]=null;
+    }else{
+      slots=slots.map(v=>v===selected?null:v);
+      slots[i]=selected;
+      selected=null;
+    }
     paint();
   });
-  puzzleCheck=()=>slots.every((v,i)=>v===i)?solve():
-    fail("물길이 끊기는 곳은 없을까?\n조각 양옆의 강 높이를 살펴봐.");
+
+  puzzleCheck=()=>{
+    if(slots.every((v,i)=>v===i))solve();
+    else status("조각 양옆의 강 높이를 비교해 보세요.");
+  };
 }
 
-/* ━━━━━━━━━━━ 問題3：스크래치로 기억 복원 ━━━━━━━━━━━ */
+/* ━━━━━━━━━━━ 3. 스크래치 ━━━━━━━━━━━ */
 function scratchPuzzle(){
   let dragging=false,last=null,pct=0,row=18;
-  ui.stage.innerHTML=`<div class="puzzle">
-    <div class="rule">가려진 기억을 60% 이상 찾아 주세요</div>
-    <div class="scratch-wrap">
-      <div class="memory-picture">${visual("memoryBedroom","침대맡에 놓인 작은 별","🛏")}</div>
+
+  puzzleFrame(
+    "가려진 기억을 찾아 주세요",
+    "화면을 문질러 그림을 60% 이상 드러내세요.",
+    `<div class="scratch-wrap">
+      <div class="scratch-picture">
+        ${sceneImage("book","책 속에 떠오른 아이의 방","★")}
+      </div>
       <canvas class="cover" id="scratch" width="440" height="240"
         tabindex="0" aria-label="손가락이나 마우스로 문질러 그림을 드러내세요"></canvas>
     </div>
     <div class="bar"><i id="scratchBar"></i></div>
-    <div class="note" id="scratchPercent">0% 발견</div>
-    <button class="secondary" id="scratchAssist">한 줄 걷어내기</button>
-  </div>`;
+    <div class="puzzle-note" id="scratchPercent">0% 발견</div>
+    <button class="secondary" id="scratchAssist">한 줄 걷어내기</button>`
+  );
+
   const canvas=$("#scratch");
   const ctx=canvas.getContext("2d",{willReadFrequently:true});
-  if(!ctx){fail("그림을 불러오지 못했어.\n다시 시작하거나 테스트 패스를 눌러 줘.");return}
+
+  if(!ctx){
+    status("그림을 불러오지 못했습니다. 문제 다시 또는 테스트 패스를 이용해 주세요.");
+    return;
+  }
+
   const gradient=ctx.createLinearGradient(0,0,440,240);
-  gradient.addColorStop(0,"#bdc8c4");gradient.addColorStop(1,"#95aaa0");
-  ctx.fillStyle=gradient;ctx.fillRect(0,0,440,240);
-  ctx.fillStyle="#526e61";ctx.font="bold 18px sans-serif";ctx.textAlign="center";
+  gradient.addColorStop(0,"#d7b8cd");
+  gradient.addColorStop(1,"#bca0b7");
+  ctx.fillStyle=gradient;
+  ctx.fillRect(0,0,440,240);
+  ctx.fillStyle="#8c647c";
+  ctx.font="bold 18px sans-serif";
+  ctx.textAlign="center";
   ctx.fillText("살살 문질러 기억을 찾아주세요",220,125);
-  ctx.globalCompositeOperation="destination-out";ctx.lineWidth=43;ctx.lineCap="round";
+  ctx.globalCompositeOperation="destination-out";
+  ctx.lineWidth=43;
+  ctx.lineCap="round";
 
   const erase=(a,b)=>{
-    ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(a[0],a[1]);
+    ctx.lineTo(b[0],b[1]);
+    ctx.stroke();
   };
+
   const update=()=>{
     const pixels=ctx.getImageData(0,0,440,240).data;
     let total=0,clear=0;
-    for(let i=3;i<pixels.length;i+=64){total++;if(pixels[i]<100)clear++}
+    for(let i=3;i<pixels.length;i+=64){
+      total++;
+      if(pixels[i]<100)clear++;
+    }
     pct=Math.round(clear/total*100);
     $("#scratchBar").style.width=pct+"%";
     $("#scratchPercent").textContent=pct+"% 발견";
   };
+
   const point=e=>{
     const r=canvas.getBoundingClientRect();
-    return[(e.clientX-r.left)*440/r.width,(e.clientY-r.top)*240/r.height];
+    return[
+      (e.clientX-r.left)*440/r.width,
+      (e.clientY-r.top)*240/r.height
+    ];
   };
+
   canvas.onpointerdown=e=>{
     if(solved)return;
-    dragging=true;canvas.setPointerCapture(e.pointerId);last=point(e);
+    dragging=true;
+    canvas.setPointerCapture(e.pointerId);
+    last=point(e);
     erase(last,[last[0]+.1,last[1]]);
   };
+
   canvas.onpointermove=e=>{
     if(!dragging||solved)return;
-    const p=point(e);erase(last,p);last=p;
+    const p=point(e);
+    erase(last,p);
+    last=p;
   };
-  canvas.onpointerup=canvas.onpointercancel=()=>{dragging=false;update()};
+
+  canvas.onpointerup=canvas.onpointercancel=()=>{
+    dragging=false;
+    update();
+  };
+
   $("#scratchAssist").onclick=()=>{
     if(solved)return;
-    erase([0,row],[440,row]);row+=34;update();
+    erase([0,row],[440,row]);
+    row+=34;
+    update();
   };
+
   puzzleCheck=()=>{
     update();
     if(pct>=60){
-      canvas.hidden=true;$("#scratchAssist").disabled=true;solve();
-    }else fail("기억이 조금 더 숨어 있어.\n아직 가려진 곳을 살살 문질러 보자.");
+      canvas.hidden=true;
+      solve();
+    }else status("아직 가려진 부분을 조금 더 문질러 보세요.");
   };
 }
 
-/* ━━━━━━━━━━━ 問題4：가락 재현 ━━━━━━━━━━━ */
+/* ━━━━━━━━━━━ 4. 소리 가락 ━━━━━━━━━━━ */
 async function ensureAudio(){
   const Audio=window.AudioContext||window.webkitAudioContext;
   if(!Audio)throw Error("unsupported");
   if(!audioContext)audioContext=new Audio();
-  await Promise.race([
-    audioContext.resume(),
-    new Promise((resolve,reject)=>{
-      const id=setTimeout(()=>reject(Error("timeout")),1500);
-      cleanups.push(()=>clearTimeout(id));
-    })
-  ]);
+
+  let timeout;
+  try{
+    await Promise.race([
+      audioContext.resume(),
+      new Promise((resolve,reject)=>{
+        timeout=setTimeout(()=>reject(Error("timeout")),1500);
+      })
+    ]);
+  }finally{
+    clearTimeout(timeout);
+  }
 }
-function playTone(n,delay=0){
+
+function tone(n,delay=0){
   if(!audioContext||audioContext.state!=="running")return;
-  const osc=audioContext.createOscillator(),gain=audioContext.createGain();
-  const t=audioContext.currentTime+delay;
-  osc.frequency.value=[262,330,392,523][n];
-  gain.gain.setValueAtTime(0,t);
-  gain.gain.linearRampToValueAtTime(.1,t+.02);
-  gain.gain.exponentialRampToValueAtTime(.001,t+.3);
-  osc.connect(gain);gain.connect(audioContext.destination);
-  osc.start(t);osc.stop(t+.33);
-  osc.onended=()=>{osc.disconnect();gain.disconnect()};
-  cleanups.push(()=>{try{osc.stop()}catch(e){}});
+
+  const oscillator=audioContext.createOscillator();
+  const gain=audioContext.createGain();
+  const time=audioContext.currentTime+delay;
+
+  oscillator.frequency.value=[262,330,392,523][n];
+  gain.gain.setValueAtTime(0,time);
+  gain.gain.linearRampToValueAtTime(.1,time+.02);
+  gain.gain.exponentialRampToValueAtTime(.001,time+.3);
+  oscillator.connect(gain);
+  gain.connect(audioContext.destination);
+  oscillator.start(time);
+  oscillator.stop(time+.33);
+
+  oscillator.onended=()=>{
+    oscillator.disconnect();
+    gain.disconnect();
+  };
+
+  cleanups.push(()=>{
+    try{oscillator.stop()}catch(error){}
+  });
 }
+
 function soundPuzzle(){
   const pattern=[0,2,1,3];
   let input=[],busy=false,heard=false,visualOn=true;
-  ui.stage.innerHTML=`<div class="puzzle">
-    <div class="rule">가락을 듣고 같은 순서로 눌러 주세요</div>
-    <div class="pads">${["●","▲","■","✦"].map((s,i)=>`
-      <button class="pad" data-pad="${i}" aria-label="${["도","미","솔","높은 도"][i]} 소리판" disabled>${s}</button>`).join("")}
-    </div>
+
+  puzzleFrame(
+    "기억 속 가락을 따라 해주세요",
+    "가락을 들은 뒤 같은 순서로 소리판을 누르세요.",
+    `<div class="pads">${["●","▲","■","✦"].map((symbol,i)=>
+      `<button class="pad" data-pad="${i}" aria-label="${["도","미","솔","높은 도"][i]} 소리판" disabled>${symbol}</button>`
+    ).join("")}</div>
     <button class="secondary" id="listen">가락 듣기</button>
     <button class="secondary" id="visualAudio">빛으로도 보기: 켜짐</button>
-    <div class="note" id="audioState">가락 듣기를 누르면 시작해요.</div>
-  </div>`;
+    <div class="puzzle-note" id="audioState">가락 듣기를 눌러 시작하세요.</div>`,
+    ""
+  );
+
   const flash=n=>{
     const b=ui.stage.querySelector(`[data-pad="${n}"]`);
-    if(!b)return;b.classList.add("flash");
-    registerTimeout(()=>b.classList.remove("flash"),280);
+    if(!b)return;
+    b.classList.add("flash");
+    later(()=>b.classList.remove("flash"),280);
   };
+
   $("#visualAudio").onclick=()=>{
     visualOn=!visualOn;
     $("#visualAudio").textContent="빛으로도 보기: "+(visualOn?"켜짐":"꺼짐");
   };
+
   $("#listen").onclick=async()=>{
     if(busy||solved)return;
-    const token=visitToken;
-    busy=true;input=[];heard=false;$("#listen").disabled=true;
+    const currentToken=token;
+    busy=true;
+    input=[];
+    heard=false;
+    $("#listen").disabled=true;
     ui.stage.querySelectorAll("[data-pad]").forEach(b=>b.disabled=true);
-    try{await ensureAudio()}catch(e){visualOn=true}
-    if(token!==visitToken)return;
+
+    let audioFailed=false;
+    try{await ensureAudio()}catch(error){audioFailed=true}
+
+    if(currentToken!==token)return;
+
+    if(audioFailed){
+      visualOn=true;
+      status("소리 대신 빛의 순서로도 풀 수 있어요.");
+    }
+
     $("#visualAudio").textContent="빛으로도 보기: "+(visualOn?"켜짐":"꺼짐");
     $("#audioState").textContent="가락을 듣는 중이에요.";
+
     pattern.forEach((n,i)=>{
-      playTone(n,.1+i*.65);
-      if(visualOn)registerTimeout(()=>flash(n),100+i*650);
+      tone(n,.1+i*.65);
+      if(visualOn)later(()=>flash(n),100+i*650);
     });
-    registerTimeout(()=>{
-      busy=false;heard=true;$("#listen").disabled=false;
+
+    later(()=>{
+      busy=false;
+      heard=true;
+      $("#listen").disabled=false;
       ui.stage.querySelectorAll("[data-pad]").forEach(b=>b.disabled=false);
-      $("#audioState").textContent="이제 같은 순서로 눌러 주세요.";
+      $("#audioState").textContent="같은 순서로 눌러 주세요.";
     },2900);
   };
+
   ui.stage.querySelectorAll("[data-pad]").forEach(b=>b.onclick=()=>{
     if(busy||!heard||solved)return;
-    const n=+b.dataset.pad;playTone(n);flash(n);
+    const n=+b.dataset.pad;
+    tone(n);
+    flash(n);
+
     if(n!==pattern[input.length]){
-      input=[];$("#audioState").textContent="처음 음부터 다시 해 보세요.";
+      input=[];
+      $("#audioState").textContent="처음 음부터 다시 해보세요.";
       return;
     }
-    input.push(n);$("#audioState").textContent=input.length+" / 4";
+
+    input.push(n);
+    $("#audioState").textContent=input.length+" / 4";
+
     if(input.length===pattern.length){
-      heard=false;ui.stage.querySelectorAll("[data-pad]").forEach(p=>p.disabled=true);
+      heard=false;
       solve();
     }
   });
 }
 
-/* ━━━━━━━━━━━ 問題5：소망 짝 연결 ━━━━━━━━━━━ */
+/* ━━━━━━━━━━━ 5. 소망 연결 ━━━━━━━━━━━ */
 function pairsPuzzle(){
-  let selected=null,matched=new Set();
+  let selected=null;
+  const matched=new Set();
+
   const old=[
     {id:0,text:"엄마 감기가\n빨리 나았으면!"},
     {id:1,text:"친구랑\n화해하고 싶어!"},
     {id:2,text:"내일은\n잘하고 싶어!"}
   ];
+
   const now=[
     {id:2,text:"새로운 일을\n잘 시작하고 싶어요"},
     {id:0,text:"우리 가족이\n건강했으면 좋겠어요"},
     {id:1,text:"소중한 사람과\n사이좋게 지내고 싶어요"}
   ];
-  ui.stage.innerHTML=`<div class="puzzle">
-    <div class="rule">옛날과 지금, 비슷한 마음을 이어 주세요</div>
-    <div class="pairs">
-      <div class="pair-column">${old.map(v=>`<button class="pair" data-old="${v.id}">${v.text.replaceAll("\n","<br>")}</button>`).join("")}</div>
-      <div class="pair-column">${now.map(v=>`<button class="pair" data-now="${v.id}">${v.text.replaceAll("\n","<br>")}</button>`).join("")}</div>
+
+  puzzleFrame(
+    "서로 닮은 소망을 찾아 주세요",
+    "왼쪽 기억과 비슷한 마음을 오른쪽에서 고르세요.",
+    `<div class="pairs">
+      <div class="pair-column">
+        <small>별이 기억하는 말</small>
+        ${old.map(v=>`<button class="pair" data-old="${v.id}">${esc(v.text).replaceAll("\n","<br>")}</button>`).join("")}
+      </div>
+      <div class="pair-column">
+        <small>지금 사람들의 소망</small>
+        ${now.map(v=>`<button class="pair" data-now="${v.id}">${esc(v.text).replaceAll("\n","<br>")}</button>`).join("")}
+      </div>
     </div>
-    <div class="note" id="pairState">왼쪽 기억을 고른 뒤 오른쪽 소망을 눌러 주세요.</div>
-  </div>`;
-  const paint=()=>{
+    <div class="puzzle-note" id="pairCount">0 / 3 마음 연결</div>`,
+    ""
+  );
+
+  function paint(){
     ui.stage.querySelectorAll("[data-old],[data-now]").forEach(b=>{
       const id=Number(b.dataset.old??b.dataset.now);
       b.classList.toggle("matched",matched.has(id));
       b.classList.toggle("selected",b.dataset.old!==undefined&&selected===id);
       b.disabled=matched.has(id);
     });
-  };
+  }
+
   ui.stage.querySelectorAll("[data-old]").forEach(b=>b.onclick=()=>{
-    if(!solved){selected=+b.dataset.old;paint()}
+    if(solved)return;
+    selected=+b.dataset.old;
+    paint();
+    status("");
   });
+
   ui.stage.querySelectorAll("[data-now]").forEach(b=>b.onclick=()=>{
     if(solved)return;
-    if(selected===null){$("#pairState").textContent="왼쪽 기억부터 골라 주세요.";return}
+
+    if(selected===null){
+      status("왼쪽 기억부터 골라 주세요.");
+      return;
+    }
+
     if(selected===+b.dataset.now){
-      matched.add(selected);selected=null;paint();
-      $("#pairState").textContent=matched.size+" / 3 마음 연결";
+      matched.add(selected);
+      selected=null;
+      paint();
+      $("#pairCount").textContent=matched.size+" / 3 마음 연결";
+      status("");
       if(matched.size===3)solve();
-    }else $("#pairState").textContent="두 이야기에서 무엇을 바라는지 다시 살펴봐요.";
+    }else status("두 이야기에서 바라는 것이 무엇인지 살펴보세요.");
   });
 }
 
-/* ━━━━━━━━━━━ 問題6：빛의 길 연결 ━━━━━━━━━━━ */
+/* ━━━━━━━━━━━ 6. 별빛 연결 ━━━━━━━━━━━ */
 function circuitPuzzle(){
-  const base=[[3,1],[3,1],[3,2],[1,2],[3,1],[0,3],[0,1],[3,1],[3,1]];
-  const rotation=[1,0,2,2,1,1,3,1,0];
-  ui.stage.innerHTML=`<div class="puzzle">
-    <div class="rule">입구 → 모든 조각 → 출구</div>
-    <div class="tiles">${base.map((ends,i)=>`
-      <button class="tile" data-tile="${i}" aria-label="${i+1}번 빛의 길 회전">
+  const base=[
+    [3,1],[3,1],[3,2],
+    [1,2],[3,1],[0,3],
+    [0,1],[3,1],[3,1]
+  ];
+  const rotations=[1,0,2,2,1,1,3,1,0];
+
+  puzzleFrame(
+    "별빛이 지나갈 길을 이어 주세요",
+    "왼쪽 위에서 출발해 모든 칸을 지나\n오른쪽 아래 출구까지 연결하세요.",
+    `<div class="puzzle-note">입구 →</div>
+    <div class="tiles">${base.map((ends,i)=>
+      `<button class="tile" data-tile="${i}" aria-label="${i+1}번 길 회전">
         <svg viewBox="0 0 100 100" aria-hidden="true">
-          ${ends.map(d=>`<path d="M50 50L${[50,100,50,0][d]} ${[0,50,100,50][d]}" stroke="#b89c4d" stroke-width="13" fill="none"/>`).join("")}
-          <circle cx="50" cy="50" r="8" fill="#b89c4d"/>
+          ${ends.map(d=>
+            `<path d="M50 50L${[50,100,50,0][d]} ${[0,50,100,50][d]}" stroke="#cc9b65" stroke-width="13" fill="none"/>`
+          ).join("")}
+          <circle cx="50" cy="50" r="8" fill="#cc9b65"/>
         </svg>
-      </button>`).join("")}</div>
-    <div class="note">입구는 왼쪽 위, 출구는 오른쪽 아래예요.<br>조각을 누르면 90°씩 회전합니다.</div>
-  </div>`;
+      </button>`
+    ).join("")}</div>
+    <div class="puzzle-note">조각을 누르면 90° 회전합니다.　→ 출구</div>`,
+    "별빛 보내기"
+  );
+
   const paint=()=>{
     ui.stage.querySelectorAll("[data-tile]").forEach((b,i)=>{
-      b.querySelector("svg").style.transform=`rotate(${rotation[i]*90}deg)`;
+      b.querySelector("svg").style.transform=`rotate(${rotations[i]*90}deg)`;
       b.classList.remove("lit");
     });
   };
+
   paint();
+
   ui.stage.querySelectorAll("[data-tile]").forEach(b=>b.onclick=()=>{
     if(solved)return;
-    const i=+b.dataset.tile;rotation[i]=(rotation[i]+1)%4;paint();
+    const i=+b.dataset.tile;
+    rotations[i]=(rotations[i]+1)%4;
+    paint();
   });
+
   puzzleCheck=()=>{
-    const dirs=base.map((arr,i)=>arr.map(d=>(d+rotation[i])%4));
-    let pos=0,entry=3;
+    const dirs=base.map((arr,i)=>arr.map(d=>(d+rotations[i])%4));
+    let position=0,entry=3;
     const seen=new Set();
+
     while(true){
-      if(seen.has(pos)||!dirs[pos].includes(entry))break;
-      seen.add(pos);
-      const exit=dirs[pos].find(d=>d!==entry);
-      if(pos===8&&exit===1){
+      if(seen.has(position)||!dirs[position].includes(entry))break;
+      seen.add(position);
+      const exit=dirs[position].find(d=>d!==entry);
+
+      if(position===8&&exit===1){
         if(seen.size===9){
           ui.stage.querySelectorAll(".tile").forEach(b=>b.classList.add("lit"));
-          solve();return;
+          solve();
+          return;
         }
         break;
       }
-      const x=pos%3+[0,1,0,-1][exit];
-      const y=Math.floor(pos/3)+[-1,0,1,0][exit];
+
+      const x=position%3+[0,1,0,-1][exit];
+      const y=Math.floor(position/3)+[-1,0,1,0][exit];
+
       if(x<0||x>2||y<0||y>2)break;
-      pos=y*3+x;entry=(exit+2)%4;
+
+      position=y*3+x;
+      entry=(exit+2)%4;
     }
-    ui.stage.querySelectorAll(".tile").forEach((b,i)=>b.classList.toggle("lit",seen.has(i)));
-    fail("빛이 중간에서 멈췄네.\n밝아진 조각 다음의 길을 살펴보자.");
+
+    ui.stage.querySelectorAll(".tile").forEach((b,i)=>{
+      b.classList.toggle("lit",seen.has(i));
+    });
+
+    status("밝아진 칸 다음에서 길이 끊겼어요.\n다음 조각의 방향을 확인해 보세요.");
   };
 }
 
-/* ━━━━━━━━━━━ 問題7：별을 눌러 빛 모으기 ━━━━━━━━━━━ */
+/* ━━━━━━━━━━━ 7. 별빛 모으기 ━━━━━━━━━━━ */
 function holdPuzzle(){
   let progress=0,holding=false,last=0,raf=0;
-  ui.stage.innerHTML=`<div class="puzzle">
-    <div class="rule">별을 꾹 눌러 빛을 모아 주세요</div>
-    <button class="hold-star" id="holdStar" aria-label="누르고 있으면 별빛이 모입니다">★</button>
+
+  puzzleFrame(
+    "별에게 따뜻한 빛을 모아 주세요",
+    "별을 꾹 누르고 있으면 빛이 모입니다.",
+    `<button class="hold-star" id="holdStar" aria-label="누르고 있으면 별빛이 모입니다">★</button>
     <div class="bar"><i id="holdBar"></i></div>
-    <div class="note" id="holdState">빛 0%</div>
-    <button class="secondary" id="holdAssist">한 번 눌러 힘 보태기</button>
-  </div>`;
+    <div class="puzzle-note" id="holdState">빛 0%</div>
+    <button class="secondary" id="holdAssist">한 번 눌러 힘 보태기</button>`,
+    ""
+  );
+
   const star=$("#holdStar");
-  const paint=()=>{
+
+  function paint(){
     $("#holdBar").style.width=progress+"%";
     $("#holdState").textContent="빛 "+Math.round(progress)+"%";
     star.style.setProperty("--scale",String(1+progress/700));
     star.classList.toggle("glow",progress>35);
-  };
-  const finish=()=>{
-    holding=false;cancelAnimationFrame(raf);
-    progress=100;paint();
-    $("#holdState").textContent="별빛이 가득 모였어요!";
-    star.disabled=true;$("#holdAssist").disabled=true;solve();
-  };
-  const tick=now=>{
+  }
+
+  function stop(){
+    holding=false;
+    cancelAnimationFrame(raf);
+  }
+
+  function finish(){
+    stop();
+    progress=100;
+    paint();
+    solve();
+  }
+
+  function tick(now){
     if(!holding||solved)return;
-    progress=Math.min(100,progress+(now-last)/40);last=now;paint();
+    progress=Math.min(100,progress+(now-last)/40);
+    last=now;
+    paint();
+
     if(progress>=100){finish();return}
     raf=requestAnimationFrame(tick);
-  };
-  const start=()=>{
+  }
+
+  function start(){
     if(holding||solved)return;
-    holding=true;last=performance.now();raf=requestAnimationFrame(tick);
+    holding=true;
+    last=performance.now();
+    raf=requestAnimationFrame(tick);
+  }
+
+  star.onpointerdown=e=>{
+    star.setPointerCapture(e.pointerId);
+    start();
   };
-  const stop=()=>{holding=false;cancelAnimationFrame(raf)};
-  star.onpointerdown=e=>{star.setPointerCapture(e.pointerId);start()};
   star.onpointerup=star.onpointercancel=stop;
   star.onkeydown=e=>{
-    if(e.code==="Space"||e.code==="Enter"){e.preventDefault();start()}
+    if(e.code==="Space"||e.code==="Enter"){
+      e.preventDefault();
+      start();
+    }
   };
   star.onkeyup=e=>{
-    if(e.code==="Space"||e.code==="Enter"){e.preventDefault();stop()}
+    if(e.code==="Space"||e.code==="Enter"){
+      e.preventDefault();
+      stop();
+    }
   };
   star.onblur=stop;
+
   $("#holdAssist").onclick=()=>{
     if(solved)return;
-    progress=Math.min(100,progress+20);paint();
+    progress=Math.min(100,progress+20);
+    paint();
     if(progress>=100)finish();
   };
+
   cleanups.push(stop);
-}
-
-/* ━━━━━━━━━━━ 에필로그 / 소망 남기기 ━━━━━━━━━━━ */
-const EPILOGUE=[
-  line("청룡","저기 봐! 별이 하늘로 올라가고 있어!"),
-  line("해치","이제 별은 서울의 밤하늘에서\n우리 이야기를 듣고 있을 거야."),
-  line("현무","작은 소망이어도 괜찮아.\n떠오르는 이야기를 남겨 봐.")
-];
-let epilogueIndex=0,writingWish=false,wishSubmitted=false;
-
-function renderEpilogue(){
-  epilogueIndex=0;writingWish=false;wishSubmitted=false;
-  ui.stage.innerHTML=visual("epilogue","서울의 밤하늘에 떠오른 별","✦");
-  ui.pass.disabled=true;ui.reset.disabled=true;
-  showEpilogueLine();
-  watchImages(ui.stage);
-}
-function showEpilogueLine(){
-  const item=EPILOGUE[epilogueIndex];
-  ui.count.textContent=`${epilogueIndex+1} / ${EPILOGUE.length}`;
-  say(item.who,item.text,epilogueIndex===EPILOGUE.length-1?"내 소망 남기기":"다음");
-}
-function advanceEpilogue(){
-  if(!writingWish){
-    if(epilogueIndex<EPILOGUE.length-1){epilogueIndex++;showEpilogueLine();return}
-    writingWish=true;
-    ui.stage.innerHTML=`<div class="puzzle">
-      <div class="rule">별에게 들려주고 싶은 이야기</div>
-      <div style="font-size:65px;color:#d7aa4e">✦</div>
-      <textarea class="wish-input" id="wish" maxlength="120" rows="3"
-        aria-label="별에게 남길 소망" placeholder="나의 작은 소망은……"></textarea>
-      <div class="note">120자까지 적을 수 있어요.<br>내용은 서버로 전송되지 않습니다.</div>
-    </div>`;
-    ui.count.textContent="나의 소망";
-    say("해치","별에게 어떤 이야기를 들려주고 싶어?\n글을 남기지 않고 넘어가도 괜찮아.","별에게 전하기");
-    return;
-  }
-  if(!wishSubmitted){
-    const wish=$("#wish").value.trim();
-    const safe=wish?escapeHTML(wish):"말하지 않은 마음도 함께 간직할게.";
-    ui.stage.innerHTML=`<div class="puzzle">
-      <div style="font-size:70px;color:#dfb64e">✦</div>
-      <div class="wish-preview">${safe}</div>
-      <div class="note">별에게 소망을 전했어요.</div>
-    </div>`;
-    wishSubmitted=true;
-    say("별","들려줘서 고마워.\n너의 내일도 응원하고 있을게.","모험 마치기");
-    return;
-  }
-  showOutro();
-}
-function showOutro(){
-  cleanup();
-  ui.overlay.hidden=false;
-  $("#overlayArt").innerHTML=visual("outro","별과 함께한 겨울의 모험","✦");
-  $("#overlaySmall").textContent="해치와 소울프렌즈의 크리스마스 모험";
-  $("#overlayTitle").innerHTML="모험 완료!";
-  $("#overlayText").textContent=
-    "작은 별의 이야기를 함께 찾아줘서 고마워요.\n\n이 화면을 안내데스크에 보여주고\n준비된 선물을 받아 가세요.";
-  $("#overlayButton").textContent="처음 화면으로";
-  $("#overlayButton").onclick=intro;
-  watchImages($("#overlayArt"));
 }
 
 const PUZZLES={
@@ -1078,872 +1897,137 @@ const PUZZLES={
   hold:holdPuzzle
 };
 
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   1. 지문 표시
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-const originalSetSpeaker = setSpeaker;
-
-setSpeaker = function(name) {
-  const narration = name === "지문";
-
-  ui.text.style.color = narration ? "#7b8077" : "";
-  ui.text.style.fontStyle = narration ? "italic" : "";
-
-  if (narration) {
-    ui.speaker.textContent = "";
-    ui.portrait.innerHTML = `
-      <svg viewBox="0 0 100 100" aria-hidden="true">
-        <path
-          d="M50 15L59 40L85 50L59 60L50 85L41 60L15 50L41 40Z"
-          fill="#d2c4a0"
-        />
-      </svg>
-    `;
-    return;
-  }
-
-  originalSetSpeaker(name);
-};
-
-
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   2. 이야기 교체
-
-   solved 대사 → 다음 챕터 story가 이어집니다.
-   지문은 line("지문", "(내용)")으로 작성합니다.
+   에필로그
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-CHAPTERS.splice(
-  0,
-  CHAPTERS.length,
-
-  {
-    title: "장식 상자를 찾아서",
-    image: "welcome",
-    route: "box",
-    puzzle: "box",
-
-    story: [
-      line(
-        "해치",
-        "안녕! 서울갤러리에 놀러 왔구나.\n나는 지금 크리스마스 트리를 꾸미는 중이야."
-      ),
-      line(
-        "해치",
-        "친구들은 트리를 세우고,\n나는 장식 상자를 가져가기로 했어."
-      ),
-      line(
-        "해치",
-        "그런데 상자를 여러 개 꺼내 놓아서\n어느 게 장식 상자인지 헷갈리네……."
-      ),
-      line(
-        "해치",
-        "나랑 같이 찾아줄래?\n상자에 표시가 붙어 있다고 했어!"
-      )
-    ],
-
-    guide: [
-      line(
-        "해치",
-        "창고에서 꺼낸 상자는\n이쪽에 모아 뒀대."
-      ),
-      line(
-        "해치",
-        "안내 그림을 따라가 보자.\n표시가 있는 상자를 찾으면 알려줘!"
-      )
-    ],
-
-    task: line(
-      "해치",
-      "찾았다! 그런데 잠겨 있네.\n상자에 붙은 표식과 같은 순서로\n원판을 맞춰보자."
-    ),
-
-    solved: line(
-      "해치",
-      "철컥! 안에 장식이 가득해!\n이제 트리로 가져가면 되겠다."
-    )
-  },
-
-  {
-    title: "별이 바라보던 서울",
-    image: "starAwake",
-    route: "seoul",
-    puzzle: "landscape",
-
-    story: [
-      line(
-        "지문",
-        "(해치와 함께 상자를 트리로 가져왔습니다.)"
-      ),
-      line(
-        "백호",
-        "왔구나! 트리는 튼튼하게 세웠어.\n이제 내가 상자를 들어줄게!"
-      ),
-      line(
-        "해치",
-        "고마워! ……어?\n장식들 밑에 작은 별도 있었네."
-      ),
-      line(
-        "해치",
-        "조금 낡았지만 예쁘다.\n해진 끈을 새로 달아 걸어줄게."
-      ),
-      line(
-        "지문",
-        "(별을 가지에 걸자,\n작은 빛이 깜빡입니다.)"
-      ),
-      line(
-        "별",
-        "음…… 여긴 어디야?\n내가 보던 창문은 어디 갔지?"
-      ),
-      line(
-        "해치",
-        "놀랐지? 여기는 서울갤러리야.\n너는 장식 상자 안에서 자고 있었어."
-      ),
-      line(
-        "별",
-        "상자 안에……?\n나는 늘 작은 창문 옆에 있었는데."
-      ),
-      line(
-        "해치",
-        "그곳에서 누구와 함께 지냈어?"
-      ),
-      line(
-        "별",
-        "잠들기 전에 나한테 말을 걸어주던\n친구가 있었어.\n그 친구는 지금도 잘 지낼까?"
-      ),
-      line(
-        "해치",
-        "소중한 친구였구나.\n지내던 곳을 찾으면\n친구 생각도 더 떠오를지 몰라."
-      ),
-      line(
-        "해치",
-        "창밖에 무엇이 보였는지 기억나?"
-      ),
-      line(
-        "별",
-        "밤이면 길게 반짝이는 강이 보였어.\n강 옆에는 불빛도 아주 많았고."
-      ),
-      line(
-        "백호",
-        "그거라면 찾아볼 만한 곳이 있어!\n서울도시모형을 보러 가자!"
-      )
-    ],
-
-    guide: [
-      line(
-        "해치",
-        "내친구서울 1관에는\n서울을 작게 만들어 놓은 모형이 있어."
-      ),
-      line(
-        "백호",
-        "강도 건물도 한눈에 볼 수 있지!\n별이 보던 풍경을 같이 찾아보자."
-      )
-    ],
-
-    task: line(
-      "해치",
-      "별이 떠올린 풍경이 조각으로 나타났어.\n모형의 강도 살펴보면서\n물길이 이어지도록 놓아줄래?"
-    ),
-
-    solved: line(
-      "별",
-      "맞아, 한강이야!\n작은 창문 안에서 이렇게 바라봤어.\n가까이에는 작은 지붕들도 있었고."
-    )
-  },
-
-  {
-    title: "작은 방의 기억",
-    image: "seoulScene",
-    route: "book",
-    puzzle: "scratch",
-
-    story: [
-      line(
-        "해치",
-        "한강은 찾았네!\n이제 창문 가까이에 있던 풍경도\n살펴보면 좋겠다."
-      ),
-      line(
-        "별",
-        "지붕과 골목이 보였던 것 같아.\n그림으로 보면 알아볼 수 있을까?"
-      ),
-      line(
-        "해치",
-        "서울책방에 가보자.\n서울의 동네 모습이 담긴 자료를\n찾아볼 수 있을 거야."
-      )
-    ],
-
-    guide: [
-      line(
-        "지문",
-        "(서울책방에서 자료를 살펴보던\n주작을 만났습니다.)"
-      ),
-      line(
-        "주작",
-        "동네 풍경을 찾는다고?\n그럼 이 그림도 봐.\n다른 자료까지 잔뜩 찾아뒀지."
-      ),
-      line(
-        "해치",
-        "고마워, 주작!\n별아, 아는 모습이 있어?"
-      ),
-      line(
-        "별",
-        "저 지붕…… 익숙해.\n그 옆의 창문도 보고 싶어."
-      )
-    ],
-
-    task: line(
-      "주작",
-      "그림이 가려져서 잘 안 보이네.\n살살 문질러 봐.\n창문 안쪽까지 확인해 보자."
-    ),
-
-    solved: line(
-      "별",
-      "저기야! 내 자리는 침대맡이었어.\n크리스마스가 끝나도\n그 친구는 나를 곁에 두었어."
-    )
-  },
-
-  {
-    title: "잠들기 전의 이야기",
-    image: "bookScene",
-    route: "stage",
-    puzzle: "sound",
-
-    story: [
-      line(
-        "해치",
-        "다른 장식을 정리한 뒤에도\n별은 함께 있었구나."
-      ),
-      line(
-        "별",
-        "응. 잠들기 전에 나를 바라보면서\n하루 이야기를 들려줬어."
-      ),
-      line(
-        "주작",
-        "그런데 그림 속 서울은 오래전 모습이야.\n네가 꽤 오래 잠들었던 모양인데."
-      ),
-      line(
-        "별",
-        "그렇게 오래됐구나…….\n목소리도 조금씩 흐릿해졌어."
-      ),
-      line(
-        "해치",
-        "급하게 떠올리지 않아도 괜찮아.\n공연장 쪽에서 잠깐 쉬어 가자."
-      )
-    ],
-
-    guide: [
-      line(
-        "지문",
-        "(공연장 근처에서\n청룡이 작은 가락을 흥얼거립니다.)"
-      ),
-      line(
-        "청룡",
-        "나 이 소리 좋아해!\n너희도 같이 할래?"
-      ),
-      line(
-        "별",
-        "가락을 들으니까 생각났어.\n그 친구도 이야기하기 전에\n작은 노래를 불렀는데."
-      ),
-      line(
-        "해치",
-        "그 노래를 다시 들어보면\n목소리도 떠오를지 몰라."
-      )
-    ],
-
-    task: line(
-      "청룡",
-      "별이 기억하는 가락을 들어보자!\n같은 순서로 소리판을 눌러 줘.\n나도 같이 따라 할래!"
-    ),
-
-    solved: line(
-      "별",
-      "맞아, 이 가락이야.\n그 뒤에는 이런 이야기를 들려줬어……."
-    )
-  },
-
-  {
-    title: "다시 만난 익숙한 마음",
-    image: "stageScene",
-    route: "wish",
-    puzzle: "pairs",
-
-    story: [
-      line(
-        "지문",
-        "(별의 기억 속에서\n아이의 목소리가 들려옵니다.)"
-      ),
-      line(
-        "안내",
-        "“내일은 친구랑 화해하고 싶어.”\n“엄마 감기가 빨리 나았으면 좋겠어.”"
-      ),
-      line(
-        "별",
-        "나는 소원을 이루어줄 수는 없었어.\n그냥 곁에서 이야기를 들었지."
-      ),
-      line(
-        "해치",
-        "그런데도 다음 날이면\n별에게 또 이야기하러 왔구나."
-      ),
-      line(
-        "별",
-        "응. 그 시간이 참 좋았어.\n지금은 어떤 이야기를 하고 있을까?"
-      ),
-      line(
-        "해치",
-        "그 친구의 소식은 아직 모르지만,\n지금 사람들의 소망은 만나볼 수 있어.\n소망나무에 가볼래?"
-      )
-    ],
-
-    guide: [
-      line(
-        "지문",
-        "(소망 메모를 바라보던 현무가\n옆자리를 내어줍니다.)"
-      ),
-      line(
-        "현무",
-        "소망 읽으러 왔어?\n여기서 같이 봐."
-      ),
-      line(
-        "별",
-        "종이가 정말 많네…….\n어? 이 이야기는 나도 들어봤어."
-      )
-    ],
-
-    task: line(
-      "해치",
-      "별이 들었던 소원과\n지금 사람들의 소망을 비교해 보자.\n비슷한 마음끼리 이어줄래?"
-    ),
-
-    solved: line(
-      "별",
-      "가족이 건강하길 바라는 마음도,\n누군가와 사이좋게 지내고 싶은 마음도……\n내가 듣던 이야기와 닮았어."
-    )
-  },
-
-  {
-    title: "별에게 생긴 소원",
-    image: "wishScene",
-    route: "christmas",
-    puzzle: "circuit",
-
-    story: [
-      line(
-        "별",
-        "그 친구도 많이 자랐다면\n이런 소원을 빌고 있을까?"
-      ),
-      line(
-        "현무",
-        "그럴지도.\n어른이 되어도 바라는 건 있으니까."
-      ),
-      line(
-        "지문",
-        "(별이 메모를 읽을 때마다\n낡은 표면 사이로 작은 빛이 새어 나옵니다.)"
-      ),
-      line(
-        "해치",
-        "별아, 네가 반짝이고 있어!\n기분 좋은 일이 생겼어?"
-      ),
-      line(
-        "별",
-        "이 이야기를 들을 수 있어서 좋아.\n그 친구가 들려주던 시간도 생각나고."
-      ),
-      line(
-        "별",
-        "이번에는 내가 소원을 빌고 싶어.\n이 사람들이 내년에도\n자기 이야기를 들려주러 왔으면 좋겠어."
-      ),
-      line(
-        "해치",
-        "그 마음이 빛이 되었나 봐.\n트리로 돌아가 친구들에게도 보여주자."
-      )
-    ],
-
-    guide: [
-      line(
-        "해치",
-        "처음 별을 걸어줬던 트리 옆으로 가자.\n그곳에서 별빛을 함께 살펴보는 거야."
-      ),
-      line(
-        "지문",
-        "(친구들이 모이자 별빛이 길게 뻗습니다.\n하지만 빛의 길은 중간중간 끊겨 있습니다.)"
-      ),
-      line(
-        "주작",
-        "이 빛, 더 멀리 갈 수 있겠는데?\n끊긴 길부터 이어보자."
-      )
-    ],
-
-    task: line(
-      "주작",
-      "조각을 돌려 빛의 길을 연결해 줘.\n왼쪽 위에서 시작해서\n모든 조각을 지나 출구까지!"
-    ),
-
-    solved: line(
-      "백호",
-      "이어졌다! 별빛이 끝까지 닿았어!\n별아, 이제 어디로 가고 싶어?"
-    )
-  },
-
-  {
-    title: "별이 빛나는 자리",
-    image: "christmasScene",
-    route: "christmas",
-    puzzle: "hold",
-
-    story: [
-      line(
-        "별",
-        "처음에는 예전 자리로 돌아가고 싶었어.\n그 친구의 이야기를 다시 듣고 싶었거든."
-      ),
-      line(
-        "별",
-        "그런데 여기에 듣고 싶은 이야기가\n이렇게 많이 있을 줄은 몰랐어."
-      ),
-      line(
-        "별",
-        "하늘에서 빛난다면,\n멀리 있는 그 친구와 여기 있는 사람들을\n함께 응원할 수 있을까?"
-      ),
-      line(
-        "해치",
-        "가보고 싶은 곳이 생겼구나.\n우리가 마지막까지 도와줄게."
-      )
-    ],
-
-    guide: [
-      line(
-        "해치",
-        "이번에는 이동하지 않아도 돼.\n지금 이 자리에서 별을 응원해 주자."
-      ),
-      line(
-        "별",
-        "조금 떨리지만…… 한번 가보고 싶어.\n마지막으로 힘을 보태줄래?"
-      )
-    ],
-
-    task: line(
-      "해치",
-      "별을 꾹 눌러 빛을 모아 줘.\n빛이 가득 차면\n별이 스스로 날아오를 거야."
-    ),
-
-    solved: line(
-      "별",
-      "따뜻해…… 고마워.\n들려준 이야기들을 꼭 기억하고 있을게."
-    )
-  }
-);
-
-
-/* 에필로그도 앞선 선택과 자연스럽게 이어지도록 교체 */
-EPILOGUE.splice(
-  0,
-  EPILOGUE.length,
-
-  line(
-    "지문",
-    "(장식의 모양을 감싸던 빛이 천천히 올라갑니다.\n서울의 밤하늘에 작은 별 하나가 반짝입니다.)"
-  ),
-  line(
-    "청룡",
-    "저기 있다!\n별아, 우리 보여?"
-  ),
-  line(
-    "해치",
-    "반짝이는 걸 보니 들었나 봐.\n우리 이야기도 기다리고 있겠지?"
-  ),
-  line(
-    "현무",
-    "너는 어떤 소망이 있어?\n작은 이야기여도 좋아."
-  )
-);
-
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   3. 이미지 넣기 / 이미지 포함 HTML 내보내기
-
-   - 서버 업로드 없이 파일을 직접 선택합니다.
-   - 선택한 이미지는 현재 페이지 메모리에만 보관됩니다.
-   - '이미지 포함 HTML 저장'을 누르면 이미지가 포함된
-     독립 HTML 파일을 다운로드합니다.
-   - 내보내기 전에 저장하지 않고 닫으면 선택 내역은 사라집니다.
-   - 과도한 용량을 막기 위해 긴 변 1600px, JPEG로 변환합니다.
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-/* 내보낸 HTML 안에 포함된 이미지를 먼저 읽습니다. */
-const embeddedAssetElement = document.getElementById("embeddedGameAssets");
-
-if (embeddedAssetElement) {
-  try {
-    const embedded = JSON.parse(embeddedAssetElement.textContent);
-
-    Object.assign(CONFIG.images, embedded.images || {});
-    Object.assign(CONFIG.characters, embedded.characters || {});
-  } catch (error) {
-    console.warn("포함된 이미지 정보를 읽지 못했습니다.", error);
-  }
+function renderEpilogue(){
+  epilogueIndex=0;
+  wishStep=0;
+  ui.stage.innerHTML=sceneImage("ending","서울의 밤하늘에 떠오른 별");
+  showEpilogueLine();
 }
 
-const imageLabels = {
-  intro: "인트로 배경",
-  welcome: "첫 상황 · 해치와 장식 상자",
-  boxGuide: "길 안내 · 장식 상자",
-  boxScene: "장식 상자 장면",
-  starAwake: "별이 깨어나는 장면",
-  seoulGuide: "길 안내 · 내친구서울 1관",
-  seoulScene: "서울 전경 장면",
-  bookGuide: "길 안내 · 서울책방",
-  bookScene: "책방 장면",
-  memoryBedroom: "스크래치 아래 · 아이의 방",
-  stageGuide: "길 안내 · 공연장",
-  stageScene: "공연장 장면",
-  wishGuide: "길 안내 · 소망나무",
-  wishScene: "소망나무 장면",
-  christmasGuide: "길 안내 · 크리스마스 공간",
-  christmasScene: "마지막 크리스마스 장면",
-  ending: "별빛 엔딩",
-  epilogue: "에필로그 배경",
-  outro: "아웃트로 배경"
-};
-
-const imageToolStyle = document.createElement("style");
-
-imageToolStyle.textContent = `
-  .asset-dialog {
-    width: min(92vw, 460px);
-    max-height: 84dvh;
-    padding: 20px;
-    border: 1px solid #c6d2be;
-    border-radius: 14px;
-    background: #fffaf0;
-    color: #35483f;
-    font: 14px/1.65 "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
-  }
-
-  .asset-dialog::backdrop {
-    background: #122b2480;
-  }
-
-  .asset-dialog h2 {
-    margin: 0 0 8px;
-    font-size: 20px;
-  }
-
-  .asset-dialog p {
-    margin: 8px 0;
-    color: #6f7e70;
-    font-size: 12px;
-  }
-
-  .asset-dialog select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #bacab0;
-    border-radius: 7px;
-    background: white;
-    font: inherit;
-  }
-
-  .asset-dialog input[type="file"] {
-    width: 100%;
-    margin: 14px 0;
-    font: inherit;
-  }
-
-  .asset-dialog button {
-    border: 0;
-    padding: 9px 12px;
-    border-radius: 7px;
-    background: #254e43;
-    color: white;
-    font: inherit;
-  }
-
-  .asset-dialog .asset-actions {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-top: 14px;
-  }
-
-  .asset-dialog .asset-list {
-    max-height: 120px;
-    overflow-y: auto;
-    margin-top: 12px;
-    padding: 10px;
-    border-radius: 7px;
-    background: #edf1e5;
-    font-size: 11px;
-    white-space: pre-line;
-  }
-
-  .testbar {
-    flex-wrap: wrap;
-  }
-`;
-
-document.head.appendChild(imageToolStyle);
-
-const imageToolButton = document.createElement("button");
-
-imageToolButton.id = "openAssetTool";
-imageToolButton.textContent = "이미지 넣기";
-$("#testbar").appendChild(imageToolButton);
-
-const assetDialog = document.createElement("dialog");
-
-assetDialog.id = "assetDialog";
-assetDialog.className = "asset-dialog";
-
-assetDialog.innerHTML = `
-  <h2>게임 이미지 넣기</h2>
-
-  <p>
-    적용할 위치를 고른 뒤 이미지 파일을 선택하세요.
-    파일은 서버로 전송되지 않습니다.
-  </p>
-
-  <select id="assetTarget" aria-label="이미지를 적용할 위치">
-    <optgroup label="장면 · 배경">
-      ${Object.keys(CONFIG.images).map(key => `
-        <option value="images:${key}">
-          ${escapeHTML(imageLabels[key] || key)}
-        </option>
-      `).join("")}
-    </optgroup>
-
-    <optgroup label="대화창 캐릭터">
-      ${Object.keys(CONFIG.characters).map(name => `
-        <option value="characters:${name}">
-          ${escapeHTML(name)} 이미지
-        </option>
-      `).join("")}
-    </optgroup>
-  </select>
-
-  <input
-    id="assetFile"
-    type="file"
-    accept="image/*"
-    aria-label="이미지 파일 선택"
-  >
-
-  <p id="assetStatus" role="status">
-    아직 파일을 선택하지 않았습니다.
-  </p>
-
-  <div class="asset-list" id="assetList"></div>
-
-  <div class="asset-actions">
-    <button id="exportWithImages">이미지 포함 HTML 저장</button>
-    <button id="closeAssetTool">닫고 적용</button>
-  </div>
-`;
-
-document.body.appendChild(assetDialog);
-
-let assetBusy = false;
-
-function refreshAssetList() {
-  const selected = [];
-
-  Object.entries(CONFIG.images).forEach(([key, source]) => {
-    if (source) selected.push("✓ " + (imageLabels[key] || key));
-  });
-
-  Object.entries(CONFIG.characters).forEach(([name, source]) => {
-    if (source) selected.push("✓ 캐릭터 · " + name);
-  });
-
-  $("#assetList").textContent = selected.length
-    ? selected.join("\n")
-    : "등록된 이미지가 없습니다.";
+function showEpilogueLine(){
+  const item=EPILOGUE[epilogueIndex];
+  ui.count.textContent=`${epilogueIndex+1} / ${EPILOGUE.length}`;
+  say(
+    item.who,
+    item.text,
+    epilogueIndex===EPILOGUE.length-1?"내 소망 남기기":"다음"
+  );
 }
 
-function readFileAsDataURL(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
+function advanceEpilogue(){
+  if(wishStep===0){
+    if(epilogueIndex<EPILOGUE.length-1){
+      epilogueIndex++;
+      showEpilogueLine();
+      return;
+    }
 
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = () => reject(new Error("파일을 읽지 못했습니다."));
-
-    reader.readAsDataURL(file);
-  });
-}
-
-async function prepareImage(file, preserveAlpha) {
-  const original = await readFileAsDataURL(file);
-
-  return new Promise((resolve, reject) => {
-    const image = new Image();
-
-    image.onload = () => {
-      const maxEdge = preserveAlpha ? 700 : 1600;
-      const ratio = Math.min(
-        1,
-        maxEdge / Math.max(image.naturalWidth, image.naturalHeight)
-      );
-
-      const canvas = document.createElement("canvas");
-
-      canvas.width = Math.max(1, Math.round(image.naturalWidth * ratio));
-      canvas.height = Math.max(1, Math.round(image.naturalHeight * ratio));
-
-      const context = canvas.getContext("2d");
-
-      if (!context) {
-        reject(new Error("이미지 변환을 지원하지 않는 환경입니다."));
-        return;
-      }
-
-      if (!preserveAlpha) {
-        context.fillStyle = "#fffaf0";
-        context.fillRect(0, 0, canvas.width, canvas.height);
-      }
-
-      context.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-      resolve(
-        preserveAlpha
-          ? canvas.toDataURL("image/png")
-          : canvas.toDataURL("image/jpeg", 0.86)
-      );
-    };
-
-    image.onerror = () => reject(
-      new Error("이 이미지 형식을 읽지 못했습니다. PNG 또는 JPEG를 사용해 주세요.")
+    wishStep=1;
+    ui.stage.innerHTML=`
+      <div class="wish-panel">
+        <div class="star">✦</div>
+        <textarea
+          class="wish-input"
+          id="wishInput"
+          maxlength="120"
+          rows="3"
+          aria-label="별에게 남길 소망"
+          placeholder="나의 작은 소망은……"
+        ></textarea>
+        <div class="puzzle-note">
+          120자까지 적을 수 있어요.<br>
+          작성한 내용은 서버로 전송되지 않습니다.
+        </div>
+      </div>`;
+    ui.count.textContent="나의 소망";
+    say(
+      "해치",
+      "별에게 어떤 이야기를 들려주고 싶어?\n글을 남기지 않고 넘어가도 괜찮아.",
+      "별에게 전하기"
     );
-
-    image.src = original;
-  });
-}
-
-imageToolButton.onclick = () => {
-  refreshAssetList();
-  assetDialog.showModal();
-};
-
-$("#assetFile").onchange = async event => {
-  const file = event.target.files[0];
-
-  if (!file || assetBusy) return;
-
-  const [group, key] = $("#assetTarget").value.split(":");
-
-  assetBusy = true;
-  $("#exportWithImages").disabled = true;
-  $("#closeAssetTool").disabled = true;
-  $("#assetFile").disabled = true;
-  $("#assetStatus").textContent = "이미지를 적용하고 있습니다……";
-
-  try {
-    const dataURL = await prepareImage(file, group === "characters");
-
-    CONFIG[group][key] = dataURL;
-
-    $("#assetStatus").textContent =
-      "적용했습니다. 다른 위치를 선택해 계속 추가할 수 있습니다.";
-
-    refreshAssetList();
-  } catch (error) {
-    $("#assetStatus").textContent = error.message;
-  } finally {
-    assetBusy = false;
-    $("#exportWithImages").disabled = false;
-    $("#closeAssetTool").disabled = false;
-    $("#assetFile").disabled = false;
-    $("#assetFile").value = "";
-  }
-};
-
-function closeAssetDialog() {
-  if (assetBusy) return;
-
-  assetDialog.close();
-
-  /*
-    테스트 중 이미지 적용 후 화면을 다시 그립니다.
-    진행 중인 문제는 초기화되므로 이미지 등록을 먼저 하는 것이 좋습니다.
-  */
-  if (!ui.overlay.hidden) {
-    const showingOutro =
-      $("#overlayTitle").textContent.includes("모험 완료");
-
-    if (showingOutro) showOutro();
-    else intro();
-
     return;
   }
 
-  enter(phase);
+  if(wishStep===1){
+    const value=$("#wishInput").value.trim();
+
+    ui.stage.innerHTML=`
+      <div class="wish-panel">
+        <div class="star">✦</div>
+        <div class="wish-paper">${
+          value?esc(value):"말하지 않은 마음도\n함께 간직할게."
+        }</div>
+        <div class="puzzle-note">별에게 소망을 전했어요.</div>
+      </div>`;
+
+    wishStep=2;
+    say(
+      "별",
+      "들려줘서 고마워.\n너의 내일도 응원하고 있을게.",
+      "모험 마치기"
+    );
+    return;
+  }
+
+  outro();
 }
 
-$("#closeAssetTool").onclick = closeAssetDialog;
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   인트로 / 아웃트로
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function showOverlay(image,title,small,text,button,action){
+  cleanup();
+  ui.overlay.hidden=false;
+  $("#overlayArt").innerHTML=sceneImage(image,title);
+  $("#overlaySmall").textContent=small;
+  $("#overlayTitle").textContent=title;
+  $("#overlayText").textContent=text;
+  $("#overlayButton").textContent=button;
+  $("#overlayButton").onclick=action;
+  watchImages($("#overlayArt"));
+}
 
-assetDialog.addEventListener("cancel", event => {
-  event.preventDefault();
-  closeAssetDialog();
-});
+function intro(){
+  showOverlay(
+    "intro",
+    "별이 기억하는 겨울",
+    "해치와 소울프렌즈의 크리스마스 모험",
+    "잠들어 있던 작은 별에게\n어떤 이야기가 기다리고 있을까요?",
+    "해치 만나러 가기",
+    ()=>{
+      chapter=0;
+      ui.overlay.hidden=true;
+      enter("before");
+    }
+  );
+}
 
-$("#exportWithImages").onclick = () => {
-  if (assetBusy) return;
+function outro(){
+  showOverlay(
+    "outro",
+    "모험 완료!",
+    "함께해 줘서 고마워요",
+    "작은 별의 이야기를 함께 찾아냈어요.\n\n이 화면을 안내데스크에 보여주고\n준비된 선물을 받아 가세요.",
+    "처음 화면으로",
+    intro
+  );
+}
 
-  const clone = document.documentElement.cloneNode(true);
-
-  /*
-    이미지를 담는 JSON 블록을 head에 넣습니다.
-    게임 실행 시 위 코드가 JSON을 읽어 CONFIG에 적용합니다.
-  */
-  clone.querySelector("#embeddedGameAssets")?.remove();
-  clone.querySelector("#assetDialog")?.remove();
-
-  /*
-    도구는 실행 스크립트가 다시 생성하므로
-    저장된 DOM의 버튼은 제거해 중복을 방지합니다.
-  */
-  clone.querySelector("#openAssetTool")?.remove();
-
-  const payload = document.createElement("script");
-
-  payload.id = "embeddedGameAssets";
-  payload.type = "application/json";
-
-  payload.textContent = JSON.stringify({
-    images: CONFIG.images,
-    characters: CONFIG.characters
-  }).replaceAll("<", "\\u003c");
-
-  clone.querySelector("head").appendChild(payload);
-
-  /*
-    내보낸 파일은 항상 인트로에서 시작합니다.
-    textarea에 입력한 소망은 저장하지 않습니다.
-  */
-  clone.querySelectorAll("textarea").forEach(element => {
-    element.textContent = "";
-    element.removeAttribute("value");
-  });
-
-  const html = "<!DOCTYPE html>\n" + clone.outerHTML;
-  const blob = new Blob([html], { type: "text/html;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-
-  const link = document.createElement("a");
-
-  link.href = url;
-  link.download = "star-winter-with-images.html";
-
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-
-  setTimeout(() => URL.revokeObjectURL(url), 30000);
-
-  $("#assetStatus").textContent =
-    "이미지를 포함한 HTML을 저장했습니다. 내려받은 파일을 열어 확인해 주세요.";
+$("#home").onclick=()=>{
+  if(confirm("처음 화면으로 돌아갈까요?\n진행 중인 문제는 초기화됩니다.")){
+    intro();
+  }
 };
 
+$("#testbar").hidden=!CONFIG.testMode;
+ui.pass.disabled=true;
+ui.retry.disabled=true;
 
-/* 게임 시작 */
 intro();
+
 })();
 </script>
 </body>
