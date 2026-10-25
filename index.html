@@ -1078,6 +1078,871 @@ const PUZZLES={
   hold:holdPuzzle
 };
 
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   1. 지문 표시
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+const originalSetSpeaker = setSpeaker;
+
+setSpeaker = function(name) {
+  const narration = name === "지문";
+
+  ui.text.style.color = narration ? "#7b8077" : "";
+  ui.text.style.fontStyle = narration ? "italic" : "";
+
+  if (narration) {
+    ui.speaker.textContent = "";
+    ui.portrait.innerHTML = `
+      <svg viewBox="0 0 100 100" aria-hidden="true">
+        <path
+          d="M50 15L59 40L85 50L59 60L50 85L41 60L15 50L41 40Z"
+          fill="#d2c4a0"
+        />
+      </svg>
+    `;
+    return;
+  }
+
+  originalSetSpeaker(name);
+};
+
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   2. 이야기 교체
+
+   solved 대사 → 다음 챕터 story가 이어집니다.
+   지문은 line("지문", "(내용)")으로 작성합니다.
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+CHAPTERS.splice(
+  0,
+  CHAPTERS.length,
+
+  {
+    title: "장식 상자를 찾아서",
+    image: "welcome",
+    route: "box",
+    puzzle: "box",
+
+    story: [
+      line(
+        "해치",
+        "안녕! 서울갤러리에 놀러 왔구나.\n나는 지금 크리스마스 트리를 꾸미는 중이야."
+      ),
+      line(
+        "해치",
+        "친구들은 트리를 세우고,\n나는 장식 상자를 가져가기로 했어."
+      ),
+      line(
+        "해치",
+        "그런데 상자를 여러 개 꺼내 놓아서\n어느 게 장식 상자인지 헷갈리네……."
+      ),
+      line(
+        "해치",
+        "나랑 같이 찾아줄래?\n상자에 표시가 붙어 있다고 했어!"
+      )
+    ],
+
+    guide: [
+      line(
+        "해치",
+        "창고에서 꺼낸 상자는\n이쪽에 모아 뒀대."
+      ),
+      line(
+        "해치",
+        "안내 그림을 따라가 보자.\n표시가 있는 상자를 찾으면 알려줘!"
+      )
+    ],
+
+    task: line(
+      "해치",
+      "찾았다! 그런데 잠겨 있네.\n상자에 붙은 표식과 같은 순서로\n원판을 맞춰보자."
+    ),
+
+    solved: line(
+      "해치",
+      "철컥! 안에 장식이 가득해!\n이제 트리로 가져가면 되겠다."
+    )
+  },
+
+  {
+    title: "별이 바라보던 서울",
+    image: "starAwake",
+    route: "seoul",
+    puzzle: "landscape",
+
+    story: [
+      line(
+        "지문",
+        "(해치와 함께 상자를 트리로 가져왔습니다.)"
+      ),
+      line(
+        "백호",
+        "왔구나! 트리는 튼튼하게 세웠어.\n이제 내가 상자를 들어줄게!"
+      ),
+      line(
+        "해치",
+        "고마워! ……어?\n장식들 밑에 작은 별도 있었네."
+      ),
+      line(
+        "해치",
+        "조금 낡았지만 예쁘다.\n해진 끈을 새로 달아 걸어줄게."
+      ),
+      line(
+        "지문",
+        "(별을 가지에 걸자,\n작은 빛이 깜빡입니다.)"
+      ),
+      line(
+        "별",
+        "음…… 여긴 어디야?\n내가 보던 창문은 어디 갔지?"
+      ),
+      line(
+        "해치",
+        "놀랐지? 여기는 서울갤러리야.\n너는 장식 상자 안에서 자고 있었어."
+      ),
+      line(
+        "별",
+        "상자 안에……?\n나는 늘 작은 창문 옆에 있었는데."
+      ),
+      line(
+        "해치",
+        "그곳에서 누구와 함께 지냈어?"
+      ),
+      line(
+        "별",
+        "잠들기 전에 나한테 말을 걸어주던\n친구가 있었어.\n그 친구는 지금도 잘 지낼까?"
+      ),
+      line(
+        "해치",
+        "소중한 친구였구나.\n지내던 곳을 찾으면\n친구 생각도 더 떠오를지 몰라."
+      ),
+      line(
+        "해치",
+        "창밖에 무엇이 보였는지 기억나?"
+      ),
+      line(
+        "별",
+        "밤이면 길게 반짝이는 강이 보였어.\n강 옆에는 불빛도 아주 많았고."
+      ),
+      line(
+        "백호",
+        "그거라면 찾아볼 만한 곳이 있어!\n서울도시모형을 보러 가자!"
+      )
+    ],
+
+    guide: [
+      line(
+        "해치",
+        "내친구서울 1관에는\n서울을 작게 만들어 놓은 모형이 있어."
+      ),
+      line(
+        "백호",
+        "강도 건물도 한눈에 볼 수 있지!\n별이 보던 풍경을 같이 찾아보자."
+      )
+    ],
+
+    task: line(
+      "해치",
+      "별이 떠올린 풍경이 조각으로 나타났어.\n모형의 강도 살펴보면서\n물길이 이어지도록 놓아줄래?"
+    ),
+
+    solved: line(
+      "별",
+      "맞아, 한강이야!\n작은 창문 안에서 이렇게 바라봤어.\n가까이에는 작은 지붕들도 있었고."
+    )
+  },
+
+  {
+    title: "작은 방의 기억",
+    image: "seoulScene",
+    route: "book",
+    puzzle: "scratch",
+
+    story: [
+      line(
+        "해치",
+        "한강은 찾았네!\n이제 창문 가까이에 있던 풍경도\n살펴보면 좋겠다."
+      ),
+      line(
+        "별",
+        "지붕과 골목이 보였던 것 같아.\n그림으로 보면 알아볼 수 있을까?"
+      ),
+      line(
+        "해치",
+        "서울책방에 가보자.\n서울의 동네 모습이 담긴 자료를\n찾아볼 수 있을 거야."
+      )
+    ],
+
+    guide: [
+      line(
+        "지문",
+        "(서울책방에서 자료를 살펴보던\n주작을 만났습니다.)"
+      ),
+      line(
+        "주작",
+        "동네 풍경을 찾는다고?\n그럼 이 그림도 봐.\n다른 자료까지 잔뜩 찾아뒀지."
+      ),
+      line(
+        "해치",
+        "고마워, 주작!\n별아, 아는 모습이 있어?"
+      ),
+      line(
+        "별",
+        "저 지붕…… 익숙해.\n그 옆의 창문도 보고 싶어."
+      )
+    ],
+
+    task: line(
+      "주작",
+      "그림이 가려져서 잘 안 보이네.\n살살 문질러 봐.\n창문 안쪽까지 확인해 보자."
+    ),
+
+    solved: line(
+      "별",
+      "저기야! 내 자리는 침대맡이었어.\n크리스마스가 끝나도\n그 친구는 나를 곁에 두었어."
+    )
+  },
+
+  {
+    title: "잠들기 전의 이야기",
+    image: "bookScene",
+    route: "stage",
+    puzzle: "sound",
+
+    story: [
+      line(
+        "해치",
+        "다른 장식을 정리한 뒤에도\n별은 함께 있었구나."
+      ),
+      line(
+        "별",
+        "응. 잠들기 전에 나를 바라보면서\n하루 이야기를 들려줬어."
+      ),
+      line(
+        "주작",
+        "그런데 그림 속 서울은 오래전 모습이야.\n네가 꽤 오래 잠들었던 모양인데."
+      ),
+      line(
+        "별",
+        "그렇게 오래됐구나…….\n목소리도 조금씩 흐릿해졌어."
+      ),
+      line(
+        "해치",
+        "급하게 떠올리지 않아도 괜찮아.\n공연장 쪽에서 잠깐 쉬어 가자."
+      )
+    ],
+
+    guide: [
+      line(
+        "지문",
+        "(공연장 근처에서\n청룡이 작은 가락을 흥얼거립니다.)"
+      ),
+      line(
+        "청룡",
+        "나 이 소리 좋아해!\n너희도 같이 할래?"
+      ),
+      line(
+        "별",
+        "가락을 들으니까 생각났어.\n그 친구도 이야기하기 전에\n작은 노래를 불렀는데."
+      ),
+      line(
+        "해치",
+        "그 노래를 다시 들어보면\n목소리도 떠오를지 몰라."
+      )
+    ],
+
+    task: line(
+      "청룡",
+      "별이 기억하는 가락을 들어보자!\n같은 순서로 소리판을 눌러 줘.\n나도 같이 따라 할래!"
+    ),
+
+    solved: line(
+      "별",
+      "맞아, 이 가락이야.\n그 뒤에는 이런 이야기를 들려줬어……."
+    )
+  },
+
+  {
+    title: "다시 만난 익숙한 마음",
+    image: "stageScene",
+    route: "wish",
+    puzzle: "pairs",
+
+    story: [
+      line(
+        "지문",
+        "(별의 기억 속에서\n아이의 목소리가 들려옵니다.)"
+      ),
+      line(
+        "안내",
+        "“내일은 친구랑 화해하고 싶어.”\n“엄마 감기가 빨리 나았으면 좋겠어.”"
+      ),
+      line(
+        "별",
+        "나는 소원을 이루어줄 수는 없었어.\n그냥 곁에서 이야기를 들었지."
+      ),
+      line(
+        "해치",
+        "그런데도 다음 날이면\n별에게 또 이야기하러 왔구나."
+      ),
+      line(
+        "별",
+        "응. 그 시간이 참 좋았어.\n지금은 어떤 이야기를 하고 있을까?"
+      ),
+      line(
+        "해치",
+        "그 친구의 소식은 아직 모르지만,\n지금 사람들의 소망은 만나볼 수 있어.\n소망나무에 가볼래?"
+      )
+    ],
+
+    guide: [
+      line(
+        "지문",
+        "(소망 메모를 바라보던 현무가\n옆자리를 내어줍니다.)"
+      ),
+      line(
+        "현무",
+        "소망 읽으러 왔어?\n여기서 같이 봐."
+      ),
+      line(
+        "별",
+        "종이가 정말 많네…….\n어? 이 이야기는 나도 들어봤어."
+      )
+    ],
+
+    task: line(
+      "해치",
+      "별이 들었던 소원과\n지금 사람들의 소망을 비교해 보자.\n비슷한 마음끼리 이어줄래?"
+    ),
+
+    solved: line(
+      "별",
+      "가족이 건강하길 바라는 마음도,\n누군가와 사이좋게 지내고 싶은 마음도……\n내가 듣던 이야기와 닮았어."
+    )
+  },
+
+  {
+    title: "별에게 생긴 소원",
+    image: "wishScene",
+    route: "christmas",
+    puzzle: "circuit",
+
+    story: [
+      line(
+        "별",
+        "그 친구도 많이 자랐다면\n이런 소원을 빌고 있을까?"
+      ),
+      line(
+        "현무",
+        "그럴지도.\n어른이 되어도 바라는 건 있으니까."
+      ),
+      line(
+        "지문",
+        "(별이 메모를 읽을 때마다\n낡은 표면 사이로 작은 빛이 새어 나옵니다.)"
+      ),
+      line(
+        "해치",
+        "별아, 네가 반짝이고 있어!\n기분 좋은 일이 생겼어?"
+      ),
+      line(
+        "별",
+        "이 이야기를 들을 수 있어서 좋아.\n그 친구가 들려주던 시간도 생각나고."
+      ),
+      line(
+        "별",
+        "이번에는 내가 소원을 빌고 싶어.\n이 사람들이 내년에도\n자기 이야기를 들려주러 왔으면 좋겠어."
+      ),
+      line(
+        "해치",
+        "그 마음이 빛이 되었나 봐.\n트리로 돌아가 친구들에게도 보여주자."
+      )
+    ],
+
+    guide: [
+      line(
+        "해치",
+        "처음 별을 걸어줬던 트리 옆으로 가자.\n그곳에서 별빛을 함께 살펴보는 거야."
+      ),
+      line(
+        "지문",
+        "(친구들이 모이자 별빛이 길게 뻗습니다.\n하지만 빛의 길은 중간중간 끊겨 있습니다.)"
+      ),
+      line(
+        "주작",
+        "이 빛, 더 멀리 갈 수 있겠는데?\n끊긴 길부터 이어보자."
+      )
+    ],
+
+    task: line(
+      "주작",
+      "조각을 돌려 빛의 길을 연결해 줘.\n왼쪽 위에서 시작해서\n모든 조각을 지나 출구까지!"
+    ),
+
+    solved: line(
+      "백호",
+      "이어졌다! 별빛이 끝까지 닿았어!\n별아, 이제 어디로 가고 싶어?"
+    )
+  },
+
+  {
+    title: "별이 빛나는 자리",
+    image: "christmasScene",
+    route: "christmas",
+    puzzle: "hold",
+
+    story: [
+      line(
+        "별",
+        "처음에는 예전 자리로 돌아가고 싶었어.\n그 친구의 이야기를 다시 듣고 싶었거든."
+      ),
+      line(
+        "별",
+        "그런데 여기에 듣고 싶은 이야기가\n이렇게 많이 있을 줄은 몰랐어."
+      ),
+      line(
+        "별",
+        "하늘에서 빛난다면,\n멀리 있는 그 친구와 여기 있는 사람들을\n함께 응원할 수 있을까?"
+      ),
+      line(
+        "해치",
+        "가보고 싶은 곳이 생겼구나.\n우리가 마지막까지 도와줄게."
+      )
+    ],
+
+    guide: [
+      line(
+        "해치",
+        "이번에는 이동하지 않아도 돼.\n지금 이 자리에서 별을 응원해 주자."
+      ),
+      line(
+        "별",
+        "조금 떨리지만…… 한번 가보고 싶어.\n마지막으로 힘을 보태줄래?"
+      )
+    ],
+
+    task: line(
+      "해치",
+      "별을 꾹 눌러 빛을 모아 줘.\n빛이 가득 차면\n별이 스스로 날아오를 거야."
+    ),
+
+    solved: line(
+      "별",
+      "따뜻해…… 고마워.\n들려준 이야기들을 꼭 기억하고 있을게."
+    )
+  }
+);
+
+
+/* 에필로그도 앞선 선택과 자연스럽게 이어지도록 교체 */
+EPILOGUE.splice(
+  0,
+  EPILOGUE.length,
+
+  line(
+    "지문",
+    "(장식의 모양을 감싸던 빛이 천천히 올라갑니다.\n서울의 밤하늘에 작은 별 하나가 반짝입니다.)"
+  ),
+  line(
+    "청룡",
+    "저기 있다!\n별아, 우리 보여?"
+  ),
+  line(
+    "해치",
+    "반짝이는 걸 보니 들었나 봐.\n우리 이야기도 기다리고 있겠지?"
+  ),
+  line(
+    "현무",
+    "너는 어떤 소망이 있어?\n작은 이야기여도 좋아."
+  )
+);
+
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   3. 이미지 넣기 / 이미지 포함 HTML 내보내기
+
+   - 서버 업로드 없이 파일을 직접 선택합니다.
+   - 선택한 이미지는 현재 페이지 메모리에만 보관됩니다.
+   - '이미지 포함 HTML 저장'을 누르면 이미지가 포함된
+     독립 HTML 파일을 다운로드합니다.
+   - 내보내기 전에 저장하지 않고 닫으면 선택 내역은 사라집니다.
+   - 과도한 용량을 막기 위해 긴 변 1600px, JPEG로 변환합니다.
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* 내보낸 HTML 안에 포함된 이미지를 먼저 읽습니다. */
+const embeddedAssetElement = document.getElementById("embeddedGameAssets");
+
+if (embeddedAssetElement) {
+  try {
+    const embedded = JSON.parse(embeddedAssetElement.textContent);
+
+    Object.assign(CONFIG.images, embedded.images || {});
+    Object.assign(CONFIG.characters, embedded.characters || {});
+  } catch (error) {
+    console.warn("포함된 이미지 정보를 읽지 못했습니다.", error);
+  }
+}
+
+const imageLabels = {
+  intro: "인트로 배경",
+  welcome: "첫 상황 · 해치와 장식 상자",
+  boxGuide: "길 안내 · 장식 상자",
+  boxScene: "장식 상자 장면",
+  starAwake: "별이 깨어나는 장면",
+  seoulGuide: "길 안내 · 내친구서울 1관",
+  seoulScene: "서울 전경 장면",
+  bookGuide: "길 안내 · 서울책방",
+  bookScene: "책방 장면",
+  memoryBedroom: "스크래치 아래 · 아이의 방",
+  stageGuide: "길 안내 · 공연장",
+  stageScene: "공연장 장면",
+  wishGuide: "길 안내 · 소망나무",
+  wishScene: "소망나무 장면",
+  christmasGuide: "길 안내 · 크리스마스 공간",
+  christmasScene: "마지막 크리스마스 장면",
+  ending: "별빛 엔딩",
+  epilogue: "에필로그 배경",
+  outro: "아웃트로 배경"
+};
+
+const imageToolStyle = document.createElement("style");
+
+imageToolStyle.textContent = `
+  .asset-dialog {
+    width: min(92vw, 460px);
+    max-height: 84dvh;
+    padding: 20px;
+    border: 1px solid #c6d2be;
+    border-radius: 14px;
+    background: #fffaf0;
+    color: #35483f;
+    font: 14px/1.65 "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+
+  .asset-dialog::backdrop {
+    background: #122b2480;
+  }
+
+  .asset-dialog h2 {
+    margin: 0 0 8px;
+    font-size: 20px;
+  }
+
+  .asset-dialog p {
+    margin: 8px 0;
+    color: #6f7e70;
+    font-size: 12px;
+  }
+
+  .asset-dialog select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #bacab0;
+    border-radius: 7px;
+    background: white;
+    font: inherit;
+  }
+
+  .asset-dialog input[type="file"] {
+    width: 100%;
+    margin: 14px 0;
+    font: inherit;
+  }
+
+  .asset-dialog button {
+    border: 0;
+    padding: 9px 12px;
+    border-radius: 7px;
+    background: #254e43;
+    color: white;
+    font: inherit;
+  }
+
+  .asset-dialog .asset-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+
+  .asset-dialog .asset-list {
+    max-height: 120px;
+    overflow-y: auto;
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 7px;
+    background: #edf1e5;
+    font-size: 11px;
+    white-space: pre-line;
+  }
+
+  .testbar {
+    flex-wrap: wrap;
+  }
+`;
+
+document.head.appendChild(imageToolStyle);
+
+const imageToolButton = document.createElement("button");
+
+imageToolButton.id = "openAssetTool";
+imageToolButton.textContent = "이미지 넣기";
+$("#testbar").appendChild(imageToolButton);
+
+const assetDialog = document.createElement("dialog");
+
+assetDialog.id = "assetDialog";
+assetDialog.className = "asset-dialog";
+
+assetDialog.innerHTML = `
+  <h2>게임 이미지 넣기</h2>
+
+  <p>
+    적용할 위치를 고른 뒤 이미지 파일을 선택하세요.
+    파일은 서버로 전송되지 않습니다.
+  </p>
+
+  <select id="assetTarget" aria-label="이미지를 적용할 위치">
+    <optgroup label="장면 · 배경">
+      ${Object.keys(CONFIG.images).map(key => `
+        <option value="images:${key}">
+          ${escapeHTML(imageLabels[key] || key)}
+        </option>
+      `).join("")}
+    </optgroup>
+
+    <optgroup label="대화창 캐릭터">
+      ${Object.keys(CONFIG.characters).map(name => `
+        <option value="characters:${name}">
+          ${escapeHTML(name)} 이미지
+        </option>
+      `).join("")}
+    </optgroup>
+  </select>
+
+  <input
+    id="assetFile"
+    type="file"
+    accept="image/*"
+    aria-label="이미지 파일 선택"
+  >
+
+  <p id="assetStatus" role="status">
+    아직 파일을 선택하지 않았습니다.
+  </p>
+
+  <div class="asset-list" id="assetList"></div>
+
+  <div class="asset-actions">
+    <button id="exportWithImages">이미지 포함 HTML 저장</button>
+    <button id="closeAssetTool">닫고 적용</button>
+  </div>
+`;
+
+document.body.appendChild(assetDialog);
+
+let assetBusy = false;
+
+function refreshAssetList() {
+  const selected = [];
+
+  Object.entries(CONFIG.images).forEach(([key, source]) => {
+    if (source) selected.push("✓ " + (imageLabels[key] || key));
+  });
+
+  Object.entries(CONFIG.characters).forEach(([name, source]) => {
+    if (source) selected.push("✓ 캐릭터 · " + name);
+  });
+
+  $("#assetList").textContent = selected.length
+    ? selected.join("\n")
+    : "등록된 이미지가 없습니다.";
+}
+
+function readFileAsDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error("파일을 읽지 못했습니다."));
+
+    reader.readAsDataURL(file);
+  });
+}
+
+async function prepareImage(file, preserveAlpha) {
+  const original = await readFileAsDataURL(file);
+
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+
+    image.onload = () => {
+      const maxEdge = preserveAlpha ? 700 : 1600;
+      const ratio = Math.min(
+        1,
+        maxEdge / Math.max(image.naturalWidth, image.naturalHeight)
+      );
+
+      const canvas = document.createElement("canvas");
+
+      canvas.width = Math.max(1, Math.round(image.naturalWidth * ratio));
+      canvas.height = Math.max(1, Math.round(image.naturalHeight * ratio));
+
+      const context = canvas.getContext("2d");
+
+      if (!context) {
+        reject(new Error("이미지 변환을 지원하지 않는 환경입니다."));
+        return;
+      }
+
+      if (!preserveAlpha) {
+        context.fillStyle = "#fffaf0";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+      }
+
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+      resolve(
+        preserveAlpha
+          ? canvas.toDataURL("image/png")
+          : canvas.toDataURL("image/jpeg", 0.86)
+      );
+    };
+
+    image.onerror = () => reject(
+      new Error("이 이미지 형식을 읽지 못했습니다. PNG 또는 JPEG를 사용해 주세요.")
+    );
+
+    image.src = original;
+  });
+}
+
+imageToolButton.onclick = () => {
+  refreshAssetList();
+  assetDialog.showModal();
+};
+
+$("#assetFile").onchange = async event => {
+  const file = event.target.files[0];
+
+  if (!file || assetBusy) return;
+
+  const [group, key] = $("#assetTarget").value.split(":");
+
+  assetBusy = true;
+  $("#exportWithImages").disabled = true;
+  $("#closeAssetTool").disabled = true;
+  $("#assetFile").disabled = true;
+  $("#assetStatus").textContent = "이미지를 적용하고 있습니다……";
+
+  try {
+    const dataURL = await prepareImage(file, group === "characters");
+
+    CONFIG[group][key] = dataURL;
+
+    $("#assetStatus").textContent =
+      "적용했습니다. 다른 위치를 선택해 계속 추가할 수 있습니다.";
+
+    refreshAssetList();
+  } catch (error) {
+    $("#assetStatus").textContent = error.message;
+  } finally {
+    assetBusy = false;
+    $("#exportWithImages").disabled = false;
+    $("#closeAssetTool").disabled = false;
+    $("#assetFile").disabled = false;
+    $("#assetFile").value = "";
+  }
+};
+
+function closeAssetDialog() {
+  if (assetBusy) return;
+
+  assetDialog.close();
+
+  /*
+    테스트 중 이미지 적용 후 화면을 다시 그립니다.
+    진행 중인 문제는 초기화되므로 이미지 등록을 먼저 하는 것이 좋습니다.
+  */
+  if (!ui.overlay.hidden) {
+    const showingOutro =
+      $("#overlayTitle").textContent.includes("모험 완료");
+
+    if (showingOutro) showOutro();
+    else intro();
+
+    return;
+  }
+
+  enter(phase);
+}
+
+$("#closeAssetTool").onclick = closeAssetDialog;
+
+assetDialog.addEventListener("cancel", event => {
+  event.preventDefault();
+  closeAssetDialog();
+});
+
+$("#exportWithImages").onclick = () => {
+  if (assetBusy) return;
+
+  const clone = document.documentElement.cloneNode(true);
+
+  /*
+    이미지를 담는 JSON 블록을 head에 넣습니다.
+    게임 실행 시 위 코드가 JSON을 읽어 CONFIG에 적용합니다.
+  */
+  clone.querySelector("#embeddedGameAssets")?.remove();
+  clone.querySelector("#assetDialog")?.remove();
+
+  /*
+    도구는 실행 스크립트가 다시 생성하므로
+    저장된 DOM의 버튼은 제거해 중복을 방지합니다.
+  */
+  clone.querySelector("#openAssetTool")?.remove();
+
+  const payload = document.createElement("script");
+
+  payload.id = "embeddedGameAssets";
+  payload.type = "application/json";
+
+  payload.textContent = JSON.stringify({
+    images: CONFIG.images,
+    characters: CONFIG.characters
+  }).replaceAll("<", "\\u003c");
+
+  clone.querySelector("head").appendChild(payload);
+
+  /*
+    내보낸 파일은 항상 인트로에서 시작합니다.
+    textarea에 입력한 소망은 저장하지 않습니다.
+  */
+  clone.querySelectorAll("textarea").forEach(element => {
+    element.textContent = "";
+    element.removeAttribute("value");
+  });
+
+  const html = "<!DOCTYPE html>\n" + clone.outerHTML;
+  const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "star-winter-with-images.html";
+
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  setTimeout(() => URL.revokeObjectURL(url), 30000);
+
+  $("#assetStatus").textContent =
+    "이미지를 포함한 HTML을 저장했습니다. 내려받은 파일을 열어 확인해 주세요.";
+};
+
+
+/* 게임 시작 */
 intro();
 })();
 </script>
