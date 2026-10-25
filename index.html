@@ -1370,57 +1370,99 @@ function landscapeSVG(piece){
   </svg>`;
 }
 
-function landscapePuzzle(){
-  let selected=null;
-  let slots=[null,null,null];
+/* ━━━━━━━━━━━ 2. 서울 풍경 조각 ━━━━━━━━━━━ */
+function landscapePuzzle() {
+  let selected = null;
+  let slots = [null, null, null];
 
   puzzleFrame(
     "별이 바라보던 풍경을 이어 주세요",
     "강이 끊기지 않게 조각을 놓으세요.",
-    `<div class="slots">${[0,1,2].map(i)=>
-      `<button class="slot" data-slot="${i}" aria-label="${i+1}번째 자리">＋</button>`
-    ).join("")}</div>
-    <div class="pieces">${[2,0,1].map(i)=>
-      `<button class="piece" data-piece="${i}" aria-label="${i+1}번 조각 선택">${landscapeSVG(i)}</button>`
-    ).join("")}</div>
-    <div class="puzzle-note">아래 조각 선택 → 위쪽 자리 선택<br>놓인 조각을 누르면 다시 집을 수 있어요.</div>`
+
+    `
+      <div class="slots">
+        ${[0, 1, 2].map(i => `
+          <button
+            class="slot"
+            data-slot="${i}"
+            aria-label="${i + 1}번째 자리"
+          >＋</button>
+        `).join("")}
+      </div>
+
+      <div class="pieces">
+        ${[2, 0, 1].map(i => `
+          <button
+            class="piece"
+            data-piece="${i}"
+            aria-label="${i + 1}번 조각 선택"
+          >
+            ${landscapeSVG(i)}
+          </button>
+        `).join("")}
+      </div>
+
+      <div class="puzzle-note">
+        아래 조각 선택 → 위쪽 자리 선택<br>
+        놓인 조각을 누르면 다시 집을 수 있어요.
+      </div>
+    `
   );
 
-  function paint(){
-    ui.stage.querySelectorAll("[data-slot]").forEach(b=>{
-      const v=slots[+b.dataset.slot];
-      b.innerHTML=v===null?"＋":landscapeSVG(v);
+  function paint() {
+    ui.stage.querySelectorAll("[data-slot]").forEach(button => {
+      const piece = slots[Number(button.dataset.slot)];
+
+      button.innerHTML = piece === null
+        ? "＋"
+        : landscapeSVG(piece);
     });
-    ui.stage.querySelectorAll("[data-piece]").forEach(b=>{
-      const v=+b.dataset.piece;
-      b.classList.toggle("selected",selected===v);
-      b.classList.toggle("used",slots.includes(v));
+
+    ui.stage.querySelectorAll("[data-piece]").forEach(button => {
+      const piece = Number(button.dataset.piece);
+
+      button.classList.toggle("selected", selected === piece);
+      button.classList.toggle("used", slots.includes(piece));
     });
   }
 
-  ui.stage.querySelectorAll("[data-piece]").forEach(b=>b.onclick=()=>{
-    if(solved)return;
-    selected=+b.dataset.piece;
-    paint();
+  ui.stage.querySelectorAll("[data-piece]").forEach(button => {
+    button.onclick = () => {
+      if (solved) return;
+
+      selected = Number(button.dataset.piece);
+      paint();
+    };
   });
 
-  ui.stage.querySelectorAll("[data-slot]").forEach(b=>b.onclick=()=>{
-    if(solved)return;
-    const i=+b.dataset.slot;
-    if(selected===null){
-      selected=slots[i];
-      slots[i]=null;
-    }else{
-      slots=slots.map(v=>v===selected?null:v);
-      slots[i]=selected;
-      selected=null;
+  ui.stage.querySelectorAll("[data-slot]").forEach(button => {
+    button.onclick = () => {
+      if (solved) return;
+
+      const index = Number(button.dataset.slot);
+
+      if (selected === null) {
+        selected = slots[index];
+        slots[index] = null;
+      } else {
+        slots = slots.map(piece =>
+          piece === selected ? null : piece
+        );
+
+        slots[index] = selected;
+        selected = null;
+      }
+
+      paint();
+    };
+  });
+
+  puzzleCheck = () => {
+    if (slots.every((piece, index) => piece === index)) {
+      solve();
+    } else {
+      status("조각 양옆의 강 높이를 비교해 보세요.");
     }
-    paint();
-  });
-
-  puzzleCheck=()=>{
-    if(slots.every((v,i)=>v===i))solve();
-    else status("조각 양옆의 강 높이를 비교해 보세요.");
   };
 }
 
